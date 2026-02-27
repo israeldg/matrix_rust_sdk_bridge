@@ -51,7 +51,7 @@ impl MatrixClientContextFactory {
         &self,
         client: Client,
         sync_service: Arc<SyncService>,
-    ) -> MatrixClientContext {
+    ) -> Result<MatrixClientContext, CustomFailure> {
         let auth_remote = AuthRemoteDataSourceImpl::new(client.clone());
         let auth_repo = Arc::new(AuthRepositoryImpl::new(auth_remote));
         // let login_matrix = Arc::new(LoginMatrix::new(auth_repo.clone()));
@@ -62,7 +62,8 @@ impl MatrixClientContextFactory {
         let sync_repo = Arc::new(SyncRepositoryImpl::new(sync_remote));
         let sync_events = Arc::new(SyncEvents::new(sync_repo.clone()));
 
-        let room_remote = RoomRemoteDataSourceImpl::new(client.clone(), sync_service.clone());
+        let room_remote =
+            RoomRemoteDataSourceImpl::new(client.clone(), sync_service.clone()).await?;
         let room_repo = Arc::new(RoomRepositoryImpl::new(room_remote));
         let get_rooms = Arc::new(GetRooms::new(room_repo.clone()));
         // This will sync (with encryption) until an error happens or the program is
@@ -73,7 +74,7 @@ impl MatrixClientContextFactory {
         let fetch_room_events_by_room_id =
             Arc::new(FetchRoomEventsByRoomId::new(timeline_repo.clone()));
 
-        MatrixClientContext {
+        Ok(MatrixClientContext {
             client,
             sync_service,
             login_matrix_with_password,
@@ -81,7 +82,7 @@ impl MatrixClientContextFactory {
             sync_events,
             get_rooms,
             fetch_room_events_by_room_id,
-        }
+        })
     }
 
     pub async fn build_client(

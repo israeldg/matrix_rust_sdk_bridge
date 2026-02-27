@@ -1,30 +1,26 @@
-use std::sync::Arc;
-
 use crate::features::rooms::domain::{
     entities::room::RoomEntity, repositories::room_repository::RoomRepository,
 };
-use crate::frb_generated::StreamSink;
 use anyhow::{Context, Result};
+use futures_util::stream::BoxStream;
+use std::sync::Arc;
 
 pub struct GetRooms<R: RoomRepository> {
-     repo: Arc<R>,
+    repo: Arc<R>,
 }
 
-impl<R: RoomRepository> GetRooms<R>
-where
-    R: RoomRepository,
-{
+impl<R: RoomRepository> GetRooms<R> {
     pub fn new(repo: Arc<R>) -> Self {
         Self { repo }
     }
-
-    pub async fn execute(&self, space_id: String, sink: StreamSink<Vec<RoomEntity>>) -> Result<()> {
-        self
+    pub async fn execute(&self, space_id: String) -> Result<BoxStream<'static, Vec<RoomEntity>>> {
+        let stream = self
             .repo
-            .get_rooms_by_space(space_id, sink)
+            .get_rooms_by_space(space_id)
             .await
-            .with_context(|| format!("Usecase: Failed to get rooms"))?;
+            .map_err(|e| anyhow::anyhow!(e.to_string())) // Convert CustomFailure to anyhow
+            .with_context(|| "Usecase: Failed to get room stream")?;
 
-        Ok(())
+        Ok(stream)
     }
 }

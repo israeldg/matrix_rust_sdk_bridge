@@ -1,17 +1,15 @@
 use std::collections::HashMap;
 use std::sync::Arc;
 
-use chrono::{DateTime, Utc};
 use futures_util::{pin_mut, StreamExt as _};
 use imbl::Vector;
-use matrix_sdk::locks::Mutex;
 use matrix_sdk_ui::eyeball_im::VectorDiff;
+use tokio::sync::Mutex;
 
 use crate::core::error::failure::CustomFailure;
 use crate::features::timeline::data::models::timeline_handle::TimelineHandle;
 use crate::features::timeline::domain::entities::event::EventEntity;
 use crate::features::timeline::domain::entities::event_entity_delta::EventDeltaEntity;
-use crate::frb_generated::StreamSink;
 
 use matrix_sdk::ruma::RoomId;
 use matrix_sdk::Client;
@@ -22,12 +20,13 @@ use matrix_sdk_ui::timeline::{
     TimelineItemKind,
 };
 
+use futures_util::stream::BoxStream;
+
 pub trait TimelineRemoteDataSource {
     async fn fetch_events_by_room_id(
         &self,
         room_id: String,
-        sink: StreamSink<Vec<EventDeltaEntity>>,
-    ) -> Result<(), CustomFailure>;
+    ) -> Result<BoxStream<'static, Vec<EventDeltaEntity>>, CustomFailure>;
 
     async fn paginate_backwards(&self, room_id: String, limit: u16) -> Result<(), CustomFailure>;
 }
@@ -139,7 +138,7 @@ impl TimelineRemoteDataSourceImpl {
 
 impl TimelineRemoteDataSource for TimelineRemoteDataSourceImpl {
     async fn paginate_backwards(&self, room_id: String, limit: u16) -> Result<(), CustomFailure> {
-        let map = self.timelines.lock();
+        let map = self.timelines.lock().await; // Note: using matrix_sdk Mutex lock
         let handle = map
             .get(&room_id)
             .ok_or(CustomFailure::NotFound("Timeline not initialized".into()))?;
@@ -156,8 +155,11 @@ impl TimelineRemoteDataSource for TimelineRemoteDataSourceImpl {
     async fn fetch_events_by_room_id(
         &self,
         room_id: String,
-        sink: StreamSink<Vec<EventDeltaEntity>>,
-    ) -> Result<(), CustomFailure> {
+    ) -> Result<BoxStream<'static, Vec<EventDeltaEntity>>, CustomFailure> {
+        // 1. Create clones *before* the stream block
+        let timelines_ptr = self.timelines.clone();
+        let room_id_for_cleanup = room_id.clone();
+
         let room_id_parsed = RoomId::parse(&room_id)
             .map_err(|_| CustomFailure::InvalidInput("Invalid room id".into()))?;
 
@@ -176,80 +178,75 @@ impl TimelineRemoteDataSource for TimelineRemoteDataSourceImpl {
                 .map_err(|_| CustomFailure::InvalidInput("Failed to build timeline".into()))?,
         );
 
+        // Subscribe to the SDK timeline
         let (initial_items, stream) = timeline.subscribe().await;
 
-        let rust_state: Arc<Mutex<Vector<Arc<TimelineItem>>>> = Arc::new(Mutex::new(initial_items));
+        // Cache the timeline handle for pagination (we don't store the JoinHandle/Task anymore)
+        self.timelines.lock().await.insert(
+            room_id.clone(),
+            TimelineHandle {
+                timeline: timeline.clone(),
+            },
+        );
 
-        let initial_events: Vec<EventEntity> = Self::convert_vec(&rust_state.lock());
+        let s = async_stream::stream! {
+            let rust_state: Arc<Mutex<Vector<Arc<TimelineItem>>>> = Arc::new(Mutex::new(initial_items));
 
-        // 🔥 Emit initial snapshot as a Reset delta
-        sink.add(vec![EventDeltaEntity::Reset {
-            items: initial_events,
-        }])
-        .ok();
+            // 1. Yield Initial Snapshot
+            let initial_events: Vec<EventEntity> = {
+                let state = rust_state.lock().await;
+                Self::convert_vec(&state)
+            };
+            yield vec![EventDeltaEntity::Reset { items: initial_events }];
 
-        let state = rust_state.clone();
-        let task = flutter_rust_bridge::spawn(async move {
             pin_mut!(stream);
 
+            // 2. Continuous Diff Processing
             while let Some(diffs) = stream.next().await {
-                let mut state = state.lock();
+                let mut state = rust_state.lock().await;
                 let mut deltas = Vec::new();
 
                 for diff in diffs {
-                    // 1️⃣ Inspect diff WITHOUT moving it
+                    // Inspect and build delta entities
                     match &diff {
                         VectorDiff::PopFront => {
-                            if !state.is_empty() {
-                                deltas.push(EventDeltaEntity::Remove { index: 0 });
-                            }
+                            if !state.is_empty() { deltas.push(EventDeltaEntity::Remove { index: 0 }); }
                         }
-
                         VectorDiff::PopBack => {
                             if !state.is_empty() {
-                                deltas.push(EventDeltaEntity::Remove {
-                                    index: (state.len() - 1) as u32,
-                                });
+                                deltas.push(EventDeltaEntity::Remove { index: (state.len() - 1) as u32 });
                             }
                         }
-
                         VectorDiff::Truncate { length } => {
                             for i in (*length..state.len()).rev() {
                                 deltas.push(EventDeltaEntity::Remove { index: i as u32 });
                             }
                         }
-
                         VectorDiff::Clear => {
                             deltas.push(EventDeltaEntity::Reset { items: vec![] });
                         }
-
                         VectorDiff::Reset { values } => {
                             deltas.push(EventDeltaEntity::Reset {
-                                items: values
-                                    .iter()
-                                    .map(|v| Self::convert_item(v.as_ref()))
-                                    .collect(),
+                                items: values.iter().map(|v| Self::convert_item(v.as_ref())).collect(),
                             });
                         }
-
                         other => {
                             deltas.extend(Self::convert_delta(other.clone()));
-                            // ⬆️ safe because convert_delta consumes
                         }
                     }
-
-                    // 2️⃣ Apply AFTER inspection (consumes diff)
+                    // Apply the diff to our local state copy
                     diff.apply(&mut state);
                 }
 
-                sink.add(deltas).ok();
+                yield deltas;
             }
-        });
 
-        self.timelines
-            .lock()
-            .insert(room_id, TimelineHandle { timeline, task });
+            // --- THE CLEANUP ---
+            // Accessing the cloned variables we defined above
+            let mut lock = timelines_ptr.lock().await;
+            lock.remove(&room_id_for_cleanup);
+        };
 
-        Ok(())
+        Ok(Box::pin(s))
     }
 }

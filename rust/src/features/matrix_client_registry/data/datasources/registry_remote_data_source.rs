@@ -173,7 +173,7 @@ impl RegistryRemoteDataSource for RegistryRemoteDataSourceImpl {
         let client_context = self
             .client_factory
             .create(matrix_client, sync_service)
-            .await;
+            .await?;
 
         //5. Register client in the global registry IMPORTANT(account_id = matrix_user_id))
         self.registry.register_client(

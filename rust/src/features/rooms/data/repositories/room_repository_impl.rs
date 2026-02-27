@@ -1,11 +1,12 @@
+// src/data/repositories/room_repository_impl.rs
 use crate::{
     core::error::failure::CustomFailure,
     features::rooms::{
         data::datasources::room_remote_data_source::RoomRemoteDataSource,
         domain::{entities::room::RoomEntity, repositories::room_repository::RoomRepository},
     },
-    frb_generated::StreamSink,
 };
+use futures_util::stream::BoxStream;
 
 pub struct RoomRepositoryImpl<R: RoomRemoteDataSource> {
     remote: R,
@@ -21,9 +22,9 @@ impl<R: RoomRemoteDataSource> RoomRepository for RoomRepositoryImpl<R> {
     async fn get_rooms_by_space(
         &self,
         space_id: String,
-        sink: StreamSink<Vec<RoomEntity>>,
-    ) -> Result<(), CustomFailure> {
-        self.remote.get_rooms_by_space(space_id, sink).await
+    ) -> Result<BoxStream<'static, Vec<RoomEntity>>, CustomFailure> {
+        // Just forward the stream from the remote data source
+        self.remote.get_rooms_by_space_stream(space_id).await
     }
 
     async fn get_spaces(&self) -> Result<Vec<RoomEntity>, CustomFailure> {

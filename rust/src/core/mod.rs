@@ -8,3 +8,5 @@ pub mod common {
         pub mod matrix_client_registry;
     }
 }
+
+pub mod app_context;

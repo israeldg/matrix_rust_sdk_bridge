@@ -10,8 +10,7 @@ import '../features/timeline/domain/entities/event_entity_delta.dart';
 import '../frb_generated.dart';
 import 'package:flutter_rust_bridge/flutter_rust_bridge_for_generated.dart';
 
-// These functions are ignored because they are not marked as `pub`: `global_app`, `init`
-// These types are ignored because they are neither used by any `pub` functions nor (for structs and enums) marked `#[frb(unignore)]`: `AppContext`
+// These functions are ignored because they are not marked as `pub`: `global_app`
 
 Future<MatrixSessionEntity> registerMatrixClient({
   required MatrixSessionEntity session,

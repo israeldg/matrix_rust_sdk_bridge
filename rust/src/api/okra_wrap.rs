@@ -1,5 +1,7 @@
 use anyhow::{Ok, Result};
 
+use futures_util::pin_mut;
+use futures_util::StreamExt;
 use once_cell::sync::OnceCell;
 use std::sync::Arc;
 
@@ -7,17 +9,11 @@ use std::sync::Arc;
 
 // ========== Matrix SDK References ==========
 
+use crate::core::app_context::AppContext;
 // ========== Okra References ==========
-use crate::core::common::matrix_client_management::matrix_client_registry::MatrixClientRegistry;
-use crate::features::matrix_client_registry::data::datasources::registry_remote_data_source::RegistryRemoteDataSourceImpl;
-use crate::features::matrix_client_registry::data::repositories::registry_repository_impl::RegistryRepositoryImpl;
+
 use crate::features::matrix_client_registry::domain::entities::registry_session::MatrixSessionEntity;
-use crate::features::timeline::domain::entities::event::EventEntity;
 use crate::features::timeline::domain::entities::event_entity_delta::EventDeltaEntity;
-use crate::{
-    core::common::matrix_client_management::matrix_client_context_factory::MatrixClientContextFactory,
-    features::matrix_client_registry::usecases::register_matrix_client::RegisterMatrixClient,
-};
 
 use crate::features::rooms::domain::entities::room::RoomEntity;
 
@@ -41,31 +37,6 @@ fn global_app() -> &'static Arc<AppContext> {
     APP.get_or_init(|| Arc::new(AppContext::init()))
 }
 
-struct AppContext {
-    // Reference to the main SDK client.
-    registry: Arc<MatrixClientRegistry>,
-    register_matrix_client:
-        Arc<RegisterMatrixClient<RegistryRepositoryImpl<RegistryRemoteDataSourceImpl>>>,
-}
-
-#[flutter_rust_bridge::frb(opaque)]
-impl AppContext {
-    fn init() -> Self {
-        let registry = Arc::new(MatrixClientRegistry::new());
-        let client_factory = Arc::new(MatrixClientContextFactory);
-
-        let registry_remote =
-            RegistryRemoteDataSourceImpl::new(registry.clone(), client_factory.clone());
-        let registry_repo = Arc::new(RegistryRepositoryImpl::new(registry_remote));
-        let register_matrix_client = Arc::new(RegisterMatrixClient::new(registry_repo.clone()));
-
-        Self {
-            registry,
-            register_matrix_client,
-        }
-    }
-}
-
 // ==========Rust Bridge Public Methods ==========
 
 pub async fn register_matrix_client(session: MatrixSessionEntity) -> Result<MatrixSessionEntity> {
@@ -86,7 +57,23 @@ pub async fn sync_events(account_id: String, sink: StreamSink<String>) -> Result
 
     let client_context = app_context.registry.get(account_id.as_str())?;
 
-    client_context.sync_events.execute(sink).await
+    // 1. Setup the stream (Synchronously relative to this task)
+    // If this fails, Flutter gets the error immediately.
+    let sync_strem = client_context.sync_events.execute().await?;
+
+    let task_id = uuid::Uuid::new_v4();
+    println!("RUST: Bridge Task {} started", task_id);
+    pin_mut!(sync_strem);
+    // 2. The Loop (This blocks this specific FRB task, which is fine!)
+    while let Some(telem) = sync_strem.next().await {
+        if sink.add(telem).is_err() {
+            println!("RUST: Task {} - Sink closed", task_id);
+            break;
+        }
+    }
+
+    println!("RUST: Task {} - Completed", task_id);
+    Ok(())
 }
 
 pub async fn sync_rooms_by_space(
@@ -95,10 +82,25 @@ pub async fn sync_rooms_by_space(
     sink: StreamSink<Vec<RoomEntity>>,
 ) -> Result<()> {
     let app_context = global_app();
-
     let client_context = app_context.registry.get(account_id.as_str())?;
 
-    client_context.get_rooms.execute(space_id, sink).await
+    // 1. Setup the stream (Synchronously relative to this task)
+    // If this fails, Flutter gets the error immediately.
+    let room_stream = client_context.get_rooms.execute(space_id).await?;
+
+    let task_id = uuid::Uuid::new_v4();
+    println!("RUST: Bridge Task {} started", task_id);
+    pin_mut!(room_stream);
+    // 2. The Loop (This blocks this specific FRB task, which is fine!)
+    while let Some(rooms) = room_stream.next().await {
+        if sink.add(rooms).is_err() {
+            println!("RUST: Task {} - Sink closed", task_id);
+            break;
+        }
+    }
+
+    println!("RUST: Task {} - Completed", task_id);
+    Ok(())
 }
 
 pub async fn fetch_room_events_by_room_id(
@@ -110,10 +112,19 @@ pub async fn fetch_room_events_by_room_id(
 
     let client_context = app_context.registry.get(account_id.as_str())?;
 
-    client_context
+    let stream = client_context
         .fetch_room_events_by_room_id
-        .execute(room_id, sink)
-        .await
+        .execute(room_id)
+        .await?;
+
+    pin_mut!(stream);
+
+    while let Some(deltas) = stream.next().await {
+        if sink.add(deltas).is_err() {
+            break; // User left the room, stop the stream
+        }
+    }
+    Ok(())
 }
 
 const ONE_SECOND: Duration = Duration::from_secs(1);

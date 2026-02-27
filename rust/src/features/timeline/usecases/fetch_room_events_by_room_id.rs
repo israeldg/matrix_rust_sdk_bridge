@@ -1,13 +1,11 @@
 use std::sync::Arc;
 
-use crate::{
-    features::timeline::domain::{
-        entities::{event::EventEntity, event_entity_delta::EventDeltaEntity},
-        repositories::timeline_repository::TimelineRepository,
-    },
-    frb_generated::StreamSink,
+use crate::features::timeline::domain::{
+    entities::event_entity_delta::EventDeltaEntity,
+    repositories::timeline_repository::TimelineRepository,
 };
-use anyhow::Result;
+use anyhow::{Context, Result};
+use futures_util::stream::BoxStream;
 
 pub struct FetchRoomEventsByRoomId<R: TimelineRepository> {
     repo: Arc<R>,
@@ -24,8 +22,14 @@ where
     pub async fn execute(
         &self,
         room_id: String,
-        sink: StreamSink<Vec<EventDeltaEntity>>,
-    ) -> Result<()> {
-        Ok(self.repo.fetch_events_by_room_id(room_id, sink).await?)
+    ) -> Result<BoxStream<'static, Vec<EventDeltaEntity>>> {
+        let stream = self
+            .repo
+            .fetch_events_by_room_id(room_id)
+            .await
+            .map_err(|e| anyhow::anyhow!(e.to_string())) // Convert CustomFailure to anyhow
+            .with_context(|| "Usecase: Failed to get room stream")?;
+
+        Ok(stream)
     }
 }
