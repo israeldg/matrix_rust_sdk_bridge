@@ -18,7 +18,7 @@ use crate::features::{
             datasources::room_remote_data_source::RoomRemoteDataSourceImpl,
             repositories::room_repository_impl::RoomRepositoryImpl,
         },
-        usecases::get_rooms::GetRooms,
+        usecases::{get_rooms::GetRooms, send_message_to_room::SendMessageToRoom},
     },
     sync::{
         data::{
@@ -52,4 +52,5 @@ pub struct MatrixClientContext {
     pub get_rooms: Arc<GetRooms<RoomRepositoryImpl<RoomRemoteDataSourceImpl>>>,
     pub fetch_room_events_by_room_id:
         Arc<FetchRoomEventsByRoomId<TimelineRepositoryImpl<TimelineRemoteDataSourceImpl>>>,
+    pub send_message_to_room: Arc<SendMessageToRoom<RoomRepositoryImpl<RoomRemoteDataSourceImpl>>>,
 }

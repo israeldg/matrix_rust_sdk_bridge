@@ -1,6 +1,8 @@
 use std::sync::Arc;
 
-use crate::features::sync::domain::repositories::sync_repository::SyncRepository;
+use crate::features::sync::domain::{
+    entities::simple_event::SimpleEvent, repositories::sync_repository::SyncRepository,
+};
 use anyhow::{Context, Result};
 use futures_util::stream::BoxStream;
 
@@ -16,7 +18,7 @@ where
         Self { repo }
     }
 
-    pub async fn execute(&self) -> Result<BoxStream<'static, String>> {
+    pub async fn execute(&self) -> Result<BoxStream<'static, SimpleEvent>> {
         let stream = self
             .repo
             .sync()

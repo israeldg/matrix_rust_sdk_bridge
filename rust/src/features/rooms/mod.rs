@@ -25,4 +25,5 @@ pub mod domain {
 pub mod usecases {
     pub mod get_rooms;
     pub mod get_spaces;
+    pub mod send_message_to_room;
 }

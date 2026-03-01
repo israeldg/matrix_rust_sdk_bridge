@@ -177,7 +177,6 @@ impl TimelineRemoteDataSource for TimelineRemoteDataSourceImpl {
                 .await
                 .map_err(|_| CustomFailure::InvalidInput("Failed to build timeline".into()))?,
         );
-
         // Subscribe to the SDK timeline
         let (initial_items, stream) = timeline.subscribe().await;
 

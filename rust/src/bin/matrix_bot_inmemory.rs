@@ -31,13 +31,13 @@ async fn main() {
     let ai_handler = Arc::new(AiHandler {
         use_case: ai_use_case,
     });
-    let reply_handler = Arc::new(MatrixReplyHandler {
-        use_case: reply_use_case,
-    });
+    // let reply_handler = Arc::new(MatrixReplyHandler {
+    //     use_case: reply_use_case,
+    // });
 
     // 4. Register Handlers (The Plumbing)
     register_listener(tx.clone(), ai_handler);
-    register_listener(tx.clone(), reply_handler);
+    //register_listener(tx.clone(), reply_handler);
 
     // 5. Trigger First Event (Simulates message arriving from Matrix)
     println!("\n📥 [Simulator] New message arrived from Matrix Room");

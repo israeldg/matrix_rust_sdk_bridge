@@ -2,8 +2,11 @@ use std::sync::Arc;
 
 use matrix_sdk::async_trait;
 
-use crate::features::events::domain::{
-    DomainEvent, EventHandler, EventRepository, LlmClient, MatrixAdapter,
+use crate::{
+    core::common::matrix_client_management::matrix_client_context::MatrixClientContext,
+    features::events::domain::{
+        DomainEvent, EventHandler, EventRepository, LlmClient, MatrixAdapter,
+    },
 };
 pub struct ProcessAiUseCase {
     pub llm: Arc<dyn LlmClient>,
@@ -48,7 +51,7 @@ impl EventHandler for AiHandler {
 }
 
 pub struct MatrixReplyHandler {
-    pub use_case: Arc<SendReplyUseCase>,
+    pub matrix_client_context: Arc<MatrixClientContext>,
 }
 #[async_trait]
 impl EventHandler for MatrixReplyHandler {
@@ -59,7 +62,10 @@ impl EventHandler for MatrixReplyHandler {
         } = event
         {
             println!("💬 [Handler] Processing AI response...");
-            self.use_case.execute(room_id, completion).await;
+            self.matrix_client_context
+                .send_message_to_room
+                .execute(room_id, completion)
+                .await;
         }
     }
 }

@@ -25,7 +25,7 @@ use crate::{
                 datasources::room_remote_data_source::RoomRemoteDataSourceImpl,
                 repositories::room_repository_impl::RoomRepositoryImpl,
             },
-            usecases::get_rooms::GetRooms,
+            usecases::{get_rooms::GetRooms, send_message_to_room::SendMessageToRoom},
         },
         sync::{
             data::{
@@ -66,6 +66,7 @@ impl MatrixClientContextFactory {
             RoomRemoteDataSourceImpl::new(client.clone(), sync_service.clone()).await?;
         let room_repo = Arc::new(RoomRepositoryImpl::new(room_remote));
         let get_rooms = Arc::new(GetRooms::new(room_repo.clone()));
+        let send_message_to_room = Arc::new(SendMessageToRoom::new(room_repo.clone()));
         // This will sync (with encryption) until an error happens or the program is
         // stopped.
         let timeline_remote =
@@ -82,6 +83,7 @@ impl MatrixClientContextFactory {
             sync_events,
             get_rooms,
             fetch_room_events_by_room_id,
+            send_message_to_room,
         })
     }
 

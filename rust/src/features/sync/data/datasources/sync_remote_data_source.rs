@@ -1,6 +1,9 @@
 use std::sync::Arc;
 
-use crate::core::error::failure::CustomFailure;
+use crate::{
+    core::error::failure::CustomFailure,
+    features::sync::domain::entities::simple_event::SimpleEvent,
+};
 
 use futures_util::stream::{BoxStream, StreamExt};
 use matrix_sdk::config::SyncSettings;
@@ -13,28 +16,23 @@ use matrix_sdk::{
     ruma::events::room::message::{MessageType, OriginalSyncRoomMessageEvent},
     Client,
 };
-use matrix_sdk_ui::sync_service::SyncService;
 /// Represents an abstraction over the remote Matrix API data source.
 /// This version does not use `async_trait` — instead, methods return
 /// synchronous `Result`s or expose `Receiver` streams.
 pub trait SyncRemoteDataSource {
     // Sync management
     //async fn sync_once(&self, initial_sync_token: Option<String>) -> Result<String, CustomFailure>;
-    async fn sync(&self) -> Result<BoxStream<'static, String>, CustomFailure>;
+    async fn sync(&self) -> Result<BoxStream<'static, SimpleEvent>, CustomFailure>;
     //async fn sync_events(&self) -> Result<(), CustomFailure>;
 }
 
 pub struct SyncRemoteDataSourceImpl {
     matrix_client: Client,
-    sync_service: Option<Arc<SyncService>>,
 }
 
 impl SyncRemoteDataSourceImpl {
     pub fn new(matrix_client: Client) -> Self {
-        Self {
-            matrix_client,
-            sync_service: None,
-        }
+        Self { matrix_client }
     }
 }
 
@@ -98,23 +96,28 @@ impl SyncRemoteDataSource for SyncRemoteDataSourceImpl {
     ///
     /// # Important
     /// Stream automatically stops when Flutter disposes the stream or an error occurs.
-    async fn sync(&self) -> Result<BoxStream<'static, String>, CustomFailure> {
+    async fn sync(&self) -> Result<BoxStream<'static, SimpleEvent>, CustomFailure> {
         let client: Client = self.matrix_client.clone();
 
         // 1. Create a channel to act as the bridge
         // Buffer of 100 messages to handle bursts
-        let (tx, rx) = mpsc::channel::<String>(100);
+        let (tx, rx) = mpsc::channel::<SimpleEvent>(100);
 
         // 2. Add the event handler
         // The handler stays inside the SDK/Client logic
         client.add_event_handler({
             let tx = tx.clone();
-            move |event: OriginalSyncRoomMessageEvent, _room: Room| {
+            move |event: OriginalSyncRoomMessageEvent, room: Room| {
                 let tx = tx.clone();
                 async move {
                     if let MessageType::Text(text_content) = event.content.msgtype {
+                        let simple_ev = SimpleEvent::new(
+                            room.room_id().to_string(),
+                            event.sender.to_string(),
+                            text_content.body,
+                        );
                         // Send the message into our internal bridge
-                        let _ = tx.send(text_content.body).await;
+                        let _ = tx.send(simple_ev).await;
                     }
                 }
             }

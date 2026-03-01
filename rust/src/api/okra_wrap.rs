@@ -66,7 +66,7 @@ pub async fn sync_events(account_id: String, sink: StreamSink<String>) -> Result
     pin_mut!(sync_strem);
     // 2. The Loop (This blocks this specific FRB task, which is fine!)
     while let Some(telem) = sync_strem.next().await {
-        if sink.add(telem).is_err() {
+        if sink.add(telem.content).is_err() {
             println!("RUST: Task {} - Sink closed", task_id);
             break;
         }

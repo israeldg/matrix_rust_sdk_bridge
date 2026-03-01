@@ -125,7 +125,7 @@ pub struct MockLlm;
 impl LlmClient for MockLlm {
     async fn generate(&self, prompt: &str) -> String {
         tokio::time::sleep(tokio::time::Duration::from_millis(500)).await;
-        format!("🤖 Beep boop! Answer to: '{}'", prompt)
+        format!("🤖 Simulated AI Response to: '{}'", prompt)
     }
 }
 

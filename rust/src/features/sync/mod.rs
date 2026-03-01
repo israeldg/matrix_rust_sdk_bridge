@@ -10,6 +10,9 @@ pub mod data {
 
 pub mod domain {
 
+    pub mod entities {
+        pub mod simple_event;
+    }
     pub mod repositories {
         pub mod sync_repository;
     }

@@ -4,6 +4,8 @@ use crate::features::rooms::domain::entities::room::RoomEntity;
 use chrono::{DateTime, Utc};
 use futures_util::{future::join_all, pin_mut, stream::BoxStream, StreamExt};
 use imbl::Vector;
+use matrix_sdk::ruma::events::room::message::RoomMessageEventContent;
+use matrix_sdk::ruma::RoomId;
 use matrix_sdk::Client;
 use matrix_sdk_ui::room_list_service::{RoomList, RoomListItem};
 use matrix_sdk_ui::sync_service::SyncService;
@@ -17,6 +19,11 @@ pub type Rooms = Arc<Mutex<Vector<RoomListItem>>>;
 
 pub trait RoomRemoteDataSource {
     async fn get_spaces(&self) -> Result<Vec<RoomModel>, CustomFailure>;
+    async fn send_message_to_room(
+        &self,
+        room_id: String,
+        message_content: String,
+    ) -> Result<(), CustomFailure>;
 
     // ⭐ Clean Architecture fix: Return a BoxStream of RoomEntity vectors
     async fn get_rooms_by_space_stream(
@@ -187,6 +194,28 @@ impl RoomRemoteDataSource for RoomRemoteDataSourceImpl {
         };
 
         Ok(Box::pin(s))
+    }
+
+    async fn send_message_to_room(
+        &self,
+        room_id: String,
+        message_content: String,
+    ) -> Result<(), CustomFailure> {
+        let room_id = RoomId::parse(&room_id)
+            .map_err(|_| CustomFailure::Unknown("Invalid room ID".into()))?;
+
+        let room = self
+            .matrix_client
+            .get_room(&room_id)
+            .ok_or_else(|| CustomFailure::Unknown("Room not found".into()))?;
+
+        let content = RoomMessageEventContent::text_plain(message_content);
+
+        room.send(content)
+            .await
+            .map_err(|e| CustomFailure::Unknown(format!("Failed to send message: {}", e).into()))?;
+
+        Ok(())
     }
 }
 

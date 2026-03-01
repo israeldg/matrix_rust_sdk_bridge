@@ -1,5 +1,6 @@
 use crate::core::error::failure::CustomFailure;
 use crate::features::sync::data::datasources::sync_remote_data_source::SyncRemoteDataSource;
+use crate::features::sync::domain::entities::simple_event::SimpleEvent;
 use crate::features::sync::domain::repositories::sync_repository::SyncRepository;
 use futures_util::stream::BoxStream;
 pub struct SyncRepositoryImpl<R: SyncRemoteDataSource> {
@@ -17,7 +18,7 @@ impl<R: SyncRemoteDataSource> SyncRepository for SyncRepositoryImpl<R> {
     //     todo!()
     // }
 
-    async fn sync(&self) -> Result<BoxStream<'static, String>, CustomFailure> {
+    async fn sync(&self) -> Result<BoxStream<'static, SimpleEvent>, CustomFailure> {
         self.remote.sync().await
     }
 }

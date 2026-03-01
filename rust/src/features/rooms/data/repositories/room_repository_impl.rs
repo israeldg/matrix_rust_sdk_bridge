@@ -36,4 +36,14 @@ impl<R: RoomRemoteDataSource> RoomRepository for RoomRepositoryImpl<R> {
             Err(e) => Err(CustomFailure::NotFound(e.to_string())),
         }
     }
+
+    async fn send_message_to_room(
+        &self,
+        room_id: String,
+        message_content: String,
+    ) -> Result<(), CustomFailure> {
+        self.remote
+            .send_message_to_room(room_id, message_content)
+            .await
+    }
 }
