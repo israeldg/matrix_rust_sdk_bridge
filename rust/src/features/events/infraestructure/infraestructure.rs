@@ -10,8 +10,8 @@ use rdkafka::{
 
 use tokio::sync::broadcast;
 
-use crate::features::events::domain::{
-    DomainEvent, EventHandler, EventRepository, LlmClient, MatrixAdapter,
+use crate::features::events::domain::domain::{
+    DomainEvent, EventHandler, EventRepository, LlmClient,
 };
 
 pub struct RedpandaEventRepository {
@@ -126,13 +126,5 @@ impl LlmClient for MockLlm {
     async fn generate(&self, prompt: &str) -> String {
         tokio::time::sleep(tokio::time::Duration::from_millis(500)).await;
         format!("🤖 Simulated AI Response to: '{}'", prompt)
-    }
-}
-
-pub struct MockMatrix;
-#[async_trait]
-impl MatrixAdapter for MockMatrix {
-    async fn send_message(&self, room_id: &str, body: &str) {
-        println!("🚀 [Matrix API] Sending reply to {}: {}", room_id, body);
     }
 }
