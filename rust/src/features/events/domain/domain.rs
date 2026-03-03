@@ -24,7 +24,7 @@ pub enum DomainEvent {
     },
 
     // optional audit event
-    ConversationActionsCompleted {
+    ConversationActionSent {
         address: Address,
     },
 }

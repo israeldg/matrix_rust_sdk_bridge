@@ -15,7 +15,7 @@ use matrix_rust_sdk_bridge::{
             },
         },
         matrix_client_registry::domain::entities::registry_session::{
-            ClientSessionEntity, Credentials, MatrixSessionEntity,
+            ClientSessionEntity, Credentials, MatrixSessionEntity, UserSessionEntity,
         },
     },
 };
@@ -35,12 +35,7 @@ async fn main() {
     let rp_password = env::var("RP_PASSWORD").unwrap();
     let group_id = env::var("GROUP_ID").unwrap();
 
-    let homeserver = env::var("HOMESERVER").unwrap();
-    let session_path = env::var("SESSION_PATH").unwrap();
-    let passphrase = env::var("PASSPHRASE").unwrap();
     let matrix_user_id = env::var("MATRIX_USER_ID").unwrap();
-    let matrix_username = env::var("MATRIX_USERNAME").unwrap();
-    let matrix_password = env::var("MATRIX_PASSWORD").unwrap();
 
     println!("--- Starting Simple Event-Driven Matrix AI ---");
     let database_url = env::var("DATABASE_URL").unwrap();
@@ -51,17 +46,7 @@ async fn main() {
         .expect("Failed to connect to database");
 
     //setting up matrix client
-    let client_session = ClientSessionEntity::new(homeserver, session_path, passphrase);
-
-    let matrix_session = MatrixSessionEntity::new(
-        client_session,
-        None, // no user session yet
-        None,
-        Some(Credentials::UserPassword {
-            username: matrix_username,
-            password: matrix_password,
-        }),
-    );
+    let matrix_session = build_matrix_session();
 
     println!("{:#?}", matrix_session);
 
@@ -72,7 +57,7 @@ async fn main() {
         .execute(matrix_session)
         .await
         .unwrap();
-
+    println!("Session result: {:#?}", full_session);
     let client_context = app_context.registry.get(&matrix_user_id).unwrap();
 
     // 1. Setup Redpanda Infrastructure
@@ -93,6 +78,7 @@ async fn main() {
     let gateway = Arc::new(MatrixConversationGateway {
         resolver,
         matrix_client: client_context.clone(),
+        event_repository: event_repo.clone(),
     });
     // 3. Init Handlers
     let ai_handler = Arc::new(AiMessageHandler {
@@ -161,4 +147,36 @@ async fn main() {
     }
 
     println!("RUST: Task {} - Completed", task_id);
+}
+
+fn build_matrix_session() -> MatrixSessionEntity {
+    let homeserver = env::var("HOMESERVER").unwrap();
+    let session_path = env::var("SESSION_PATH").unwrap();
+    let passphrase = env::var("PASSPHRASE").unwrap();
+
+    let matrix_username = env::var("MATRIX_USERNAME").unwrap();
+    let matrix_password = env::var("MATRIX_PASSWORD").unwrap();
+    let matrix_user_id = env::var("MATRIX_USER_ID").unwrap();
+
+    let matrix_accesstoken = env::var("MATRIX_ACCESSTOKEN").unwrap();
+    let matrix_deviceid = env::var("MATRIX_DEVICEID").unwrap();
+
+    //setting up matrix client
+    let client_session = ClientSessionEntity::new(homeserver, session_path, passphrase);
+    let user_session = UserSessionEntity {
+        access_token: matrix_accesstoken,
+        refresh_token: None,
+        device_id: matrix_deviceid,
+        matrix_user_id: matrix_user_id,
+    };
+    MatrixSessionEntity::new(
+        client_session,
+        Some(user_session), // no user session yet
+        None,
+        None,
+        // Some(Credentials::UserPassword {
+        //     username: matrix_username,
+        //     password: matrix_password,
+        // })
+    )
 }
