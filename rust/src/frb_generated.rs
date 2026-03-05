@@ -37,7 +37,7 @@ flutter_rust_bridge::frb_generated_boilerplate!(
     default_rust_auto_opaque = RustAutoOpaqueMoi,
 );
 pub(crate) const FLUTTER_RUST_BRIDGE_CODEGEN_VERSION: &str = "2.11.1";
-pub(crate) const FLUTTER_RUST_BRIDGE_CODEGEN_CONTENT_HASH: i32 = -655152125;
+pub(crate) const FLUTTER_RUST_BRIDGE_CODEGEN_CONTENT_HASH: i32 = -1563057478;
 
 // Section: executor
 
@@ -45,22 +45,68 @@ flutter_rust_bridge::frb_generated_default_handler!();
 
 // Section: wire_funcs
 
+fn wire__praia_matrix__features__matrix_client_registry__domain__entities__registry_session__client_session_entity_new_impl(
+    port_: flutter_rust_bridge::for_generated::MessagePort,
+    ptr_: flutter_rust_bridge::for_generated::PlatformGeneralizedUint8ListPtr,
+    rust_vec_len_: i32,
+    data_len_: i32,
+) {
+    FLUTTER_RUST_BRIDGE_HANDLER.wrap_normal::<flutter_rust_bridge::for_generated::SseCodec,_,_>(flutter_rust_bridge::for_generated::TaskInfo{ debug_name: "client_session_entity_new", port: Some(port_), mode: flutter_rust_bridge::for_generated::FfiCallMode::Normal }, move || { 
+            let message = unsafe { flutter_rust_bridge::for_generated::Dart2RustMessageSse::from_wire(ptr_, rust_vec_len_, data_len_) };
+            let mut deserializer = flutter_rust_bridge::for_generated::SseDeserializer::new(message);
+            let api_homeserver = <String>::sse_decode(&mut deserializer);
+let api_session_path = <String>::sse_decode(&mut deserializer);
+let api_passphrase = <String>::sse_decode(&mut deserializer);deserializer.end(); move |context|  {
+                    transform_result_sse::<_, ()>((move ||  {
+                         let output_ok = Result::<_,()>::Ok(praia_matrix::features::matrix_client_registry::domain::entities::registry_session::ClientSessionEntity::new(api_homeserver, api_session_path, api_passphrase))?;   Ok(output_ok)
+                    })())
+                } })
+}
 fn wire__crate__api__okra_wrap__fetch_room_events_by_room_id_impl(
     port_: flutter_rust_bridge::for_generated::MessagePort,
     ptr_: flutter_rust_bridge::for_generated::PlatformGeneralizedUint8ListPtr,
     rust_vec_len_: i32,
     data_len_: i32,
 ) {
-    FLUTTER_RUST_BRIDGE_HANDLER.wrap_async::<flutter_rust_bridge::for_generated::SseCodec,_,_,_>(flutter_rust_bridge::for_generated::TaskInfo{ debug_name: "fetch_room_events_by_room_id", port: Some(port_), mode: flutter_rust_bridge::for_generated::FfiCallMode::Normal }, move || { 
-            let message = unsafe { flutter_rust_bridge::for_generated::Dart2RustMessageSse::from_wire(ptr_, rust_vec_len_, data_len_) };
-            let mut deserializer = flutter_rust_bridge::for_generated::SseDeserializer::new(message);
+    FLUTTER_RUST_BRIDGE_HANDLER.wrap_async::<flutter_rust_bridge::for_generated::SseCodec, _, _, _>(
+        flutter_rust_bridge::for_generated::TaskInfo {
+            debug_name: "fetch_room_events_by_room_id",
+            port: Some(port_),
+            mode: flutter_rust_bridge::for_generated::FfiCallMode::Normal,
+        },
+        move || {
+            let message = unsafe {
+                flutter_rust_bridge::for_generated::Dart2RustMessageSse::from_wire(
+                    ptr_,
+                    rust_vec_len_,
+                    data_len_,
+                )
+            };
+            let mut deserializer =
+                flutter_rust_bridge::for_generated::SseDeserializer::new(message);
             let api_room_id = <String>::sse_decode(&mut deserializer);
-let api_account_id = <String>::sse_decode(&mut deserializer);
-let api_sink = <StreamSink<Vec<crate::features::timeline::domain::entities::event_entity_delta::EventDeltaEntity>,flutter_rust_bridge::for_generated::SseCodec>>::sse_decode(&mut deserializer);deserializer.end(); move |context| async move {
-                    transform_result_sse::<_, flutter_rust_bridge::for_generated::anyhow::Error>((move || async move {
-                         let output_ok = crate::api::okra_wrap::fetch_room_events_by_room_id(api_room_id, api_account_id, api_sink).await?;   Ok(output_ok)
-                    })().await)
-                } })
+            let api_account_id = <String>::sse_decode(&mut deserializer);
+            let api_sink = <StreamSink<
+                Vec<crate::api::okra_wrap::EventDeltaEntity>,
+                flutter_rust_bridge::for_generated::SseCodec,
+            >>::sse_decode(&mut deserializer);
+            deserializer.end();
+            move |context| async move {
+                transform_result_sse::<_, flutter_rust_bridge::for_generated::anyhow::Error>(
+                    (move || async move {
+                        let output_ok = crate::api::okra_wrap::fetch_room_events_by_room_id(
+                            api_room_id,
+                            api_account_id,
+                            api_sink,
+                        )
+                        .await?;
+                        Ok(output_ok)
+                    })()
+                    .await,
+                )
+            }
+        },
+    )
 }
 fn wire__crate__api__okra_wrap__init_app_impl(
     port_: flutter_rust_bridge::for_generated::MessagePort,
@@ -96,6 +142,60 @@ fn wire__crate__api__okra_wrap__init_app_impl(
         },
     )
 }
+fn wire__crate__api__okra_wrap__map_credentials_impl(
+    port_: flutter_rust_bridge::for_generated::MessagePort,
+    ptr_: flutter_rust_bridge::for_generated::PlatformGeneralizedUint8ListPtr,
+    rust_vec_len_: i32,
+    data_len_: i32,
+) {
+    FLUTTER_RUST_BRIDGE_HANDLER.wrap_async::<flutter_rust_bridge::for_generated::SseCodec, _, _, _>(
+        flutter_rust_bridge::for_generated::TaskInfo {
+            debug_name: "map_credentials",
+            port: Some(port_),
+            mode: flutter_rust_bridge::for_generated::FfiCallMode::Normal,
+        },
+        move || {
+            let message = unsafe {
+                flutter_rust_bridge::for_generated::Dart2RustMessageSse::from_wire(
+                    ptr_,
+                    rust_vec_len_,
+                    data_len_,
+                )
+            };
+            let mut deserializer =
+                flutter_rust_bridge::for_generated::SseDeserializer::new(message);
+            let api_cred = <crate::api::okra_wrap::Credentials>::sse_decode(&mut deserializer);
+            deserializer.end();
+            move |context| async move {
+                transform_result_sse::<_, flutter_rust_bridge::for_generated::anyhow::Error>(
+                    (move || async move {
+                        let output_ok = crate::api::okra_wrap::map_credentials(api_cred).await?;
+                        Ok(output_ok)
+                    })()
+                    .await,
+                )
+            }
+        },
+    )
+}
+fn wire__praia_matrix__features__matrix_client_registry__domain__entities__registry_session__matrix_session_entity_new_impl(
+    port_: flutter_rust_bridge::for_generated::MessagePort,
+    ptr_: flutter_rust_bridge::for_generated::PlatformGeneralizedUint8ListPtr,
+    rust_vec_len_: i32,
+    data_len_: i32,
+) {
+    FLUTTER_RUST_BRIDGE_HANDLER.wrap_normal::<flutter_rust_bridge::for_generated::SseCodec,_,_>(flutter_rust_bridge::for_generated::TaskInfo{ debug_name: "matrix_session_entity_new", port: Some(port_), mode: flutter_rust_bridge::for_generated::FfiCallMode::Normal }, move || { 
+            let message = unsafe { flutter_rust_bridge::for_generated::Dart2RustMessageSse::from_wire(ptr_, rust_vec_len_, data_len_) };
+            let mut deserializer = flutter_rust_bridge::for_generated::SseDeserializer::new(message);
+            let api_client_session = <praia_matrix::features::matrix_client_registry::domain::entities::registry_session::ClientSessionEntity>::sse_decode(&mut deserializer);
+let api_user_session = <Option<praia_matrix::features::matrix_client_registry::domain::entities::registry_session::UserSessionEntity>>::sse_decode(&mut deserializer);
+let api_sync_token = <Option<String>>::sse_decode(&mut deserializer);
+let api_credentials = <Option<crate::api::okra_wrap::Credentials>>::sse_decode(&mut deserializer);deserializer.end(); move |context|  {
+                    transform_result_sse::<_, ()>((move ||  {
+                         let output_ok = Result::<_,()>::Ok(praia_matrix::features::matrix_client_registry::domain::entities::registry_session::MatrixSessionEntity::new(api_client_session, api_user_session, api_sync_token, api_credentials))?;   Ok(output_ok)
+                    })())
+                } })
+}
 fn wire__crate__api__okra_wrap__register_matrix_client_impl(
     port_: flutter_rust_bridge::for_generated::MessagePort,
     ptr_: flutter_rust_bridge::for_generated::PlatformGeneralizedUint8ListPtr,
@@ -105,7 +205,7 @@ fn wire__crate__api__okra_wrap__register_matrix_client_impl(
     FLUTTER_RUST_BRIDGE_HANDLER.wrap_async::<flutter_rust_bridge::for_generated::SseCodec,_,_,_>(flutter_rust_bridge::for_generated::TaskInfo{ debug_name: "register_matrix_client", port: Some(port_), mode: flutter_rust_bridge::for_generated::FfiCallMode::Normal }, move || { 
             let message = unsafe { flutter_rust_bridge::for_generated::Dart2RustMessageSse::from_wire(ptr_, rust_vec_len_, data_len_) };
             let mut deserializer = flutter_rust_bridge::for_generated::SseDeserializer::new(message);
-            let api_session = <crate::features::matrix_client_registry::domain::entities::registry_session::MatrixSessionEntity>::sse_decode(&mut deserializer);deserializer.end(); move |context| async move {
+            let api_session = <praia_matrix::features::matrix_client_registry::domain::entities::registry_session::MatrixSessionEntity>::sse_decode(&mut deserializer);deserializer.end(); move |context| async move {
                     transform_result_sse::<_, flutter_rust_bridge::for_generated::anyhow::Error>((move || async move {
                          let output_ok = crate::api::okra_wrap::register_matrix_client(api_session).await?;   Ok(output_ok)
                     })().await)
@@ -177,7 +277,7 @@ fn wire__crate__api__okra_wrap__sync_rooms_by_space_impl(
             let api_space_id = <String>::sse_decode(&mut deserializer);
             let api_account_id = <String>::sse_decode(&mut deserializer);
             let api_sink = <StreamSink<
-                Vec<crate::features::rooms::domain::entities::room::RoomEntity>,
+                Vec<crate::api::okra_wrap::RoomEntity>,
                 flutter_rust_bridge::for_generated::SseCodec,
             >>::sse_decode(&mut deserializer);
             deserializer.end();
@@ -236,6 +336,109 @@ fn wire__crate__api__okra_wrap__tick_impl(
         },
     )
 }
+fn wire__praia_matrix__features__matrix_client_registry__domain__entities__registry_session__user_session_entity_new_impl(
+    port_: flutter_rust_bridge::for_generated::MessagePort,
+    ptr_: flutter_rust_bridge::for_generated::PlatformGeneralizedUint8ListPtr,
+    rust_vec_len_: i32,
+    data_len_: i32,
+) {
+    FLUTTER_RUST_BRIDGE_HANDLER.wrap_normal::<flutter_rust_bridge::for_generated::SseCodec,_,_>(flutter_rust_bridge::for_generated::TaskInfo{ debug_name: "user_session_entity_new", port: Some(port_), mode: flutter_rust_bridge::for_generated::FfiCallMode::Normal }, move || { 
+            let message = unsafe { flutter_rust_bridge::for_generated::Dart2RustMessageSse::from_wire(ptr_, rust_vec_len_, data_len_) };
+            let mut deserializer = flutter_rust_bridge::for_generated::SseDeserializer::new(message);
+            let api_access_token = <String>::sse_decode(&mut deserializer);
+let api_refresh_token = <Option<String>>::sse_decode(&mut deserializer);
+let api_matrix_user_id = <String>::sse_decode(&mut deserializer);
+let api_device_id = <String>::sse_decode(&mut deserializer);deserializer.end(); move |context|  {
+                    transform_result_sse::<_, ()>((move ||  {
+                         let output_ok = Result::<_,()>::Ok(praia_matrix::features::matrix_client_registry::domain::entities::registry_session::UserSessionEntity::new(api_access_token, api_refresh_token, api_matrix_user_id, api_device_id))?;   Ok(output_ok)
+                    })())
+                } })
+}
+
+// Section: static_checks
+
+#[allow(clippy::unnecessary_literal_unwrap)]
+const _: fn() = || {
+    {
+        let ClientSessionEntity = None::<praia_matrix::features::matrix_client_registry::domain::entities::registry_session::ClientSessionEntity>.unwrap();
+        let _: String = ClientSessionEntity.homeserver;
+        let _: String = ClientSessionEntity.session_path;
+        let _: String = ClientSessionEntity.passphrase;
+    }
+    match None::<crate::api::okra_wrap::Credentials>.unwrap() {
+        crate::api::okra_wrap::Credentials::AccessToken(field0) => {
+            let _: String = field0;
+        }
+        crate::api::okra_wrap::Credentials::UserPassword { username, password } => {
+            let _: String = username;
+            let _: String = password;
+        }
+    }
+    match None::<crate::api::okra_wrap::EventDeltaEntity>.unwrap() {
+        crate::api::okra_wrap::EventDeltaEntity::PushFront { value } => {
+            let _: crate::api::okra_wrap::EventEntity = value;
+        }
+        crate::api::okra_wrap::EventDeltaEntity::PushBack { value } => {
+            let _: crate::api::okra_wrap::EventEntity = value;
+        }
+        crate::api::okra_wrap::EventDeltaEntity::Insert { index, value } => {
+            let _: u32 = index;
+            let _: crate::api::okra_wrap::EventEntity = value;
+        }
+        crate::api::okra_wrap::EventDeltaEntity::Remove { index } => {
+            let _: u32 = index;
+        }
+        crate::api::okra_wrap::EventDeltaEntity::Update { index, value } => {
+            let _: u32 = index;
+            let _: crate::api::okra_wrap::EventEntity = value;
+        }
+        crate::api::okra_wrap::EventDeltaEntity::Reset { items } => {
+            let _: Vec<crate::api::okra_wrap::EventEntity> = items;
+        }
+    }
+    {
+        let EventEntity = None::<crate::api::okra_wrap::EventEntity>.unwrap();
+        let _: String = EventEntity.id;
+        let _: String = EventEntity.sender_id;
+        let _: Option<String> = EventEntity.sender_display_name;
+        let _: Option<String> = EventEntity.sender_avatar_url;
+        let _: String = EventEntity.content;
+        let _: Option<String> = EventEntity.formatted_content;
+        let _: Option<chrono::DateTime<chrono::Utc>> = EventEntity.timestamp;
+        let _: bool = EventEntity.is_redacted;
+        let _: String = EventEntity.event_type;
+        let _: String = EventEntity.message_type;
+        let _: String = EventEntity.status;
+        let _: bool = EventEntity.is_encrypted;
+        let _: Option<std::collections::HashMap<String, String>> = EventEntity.file_info;
+    }
+    {
+        let MatrixSessionEntity = None::<praia_matrix::features::matrix_client_registry::domain::entities::registry_session::MatrixSessionEntity>.unwrap();
+        let _: praia_matrix::features::matrix_client_registry::domain::entities::registry_session::ClientSessionEntity = MatrixSessionEntity.client_session;
+        let _: Option<praia_matrix::features::matrix_client_registry::domain::entities::registry_session::UserSessionEntity> = MatrixSessionEntity.user_session;
+        let _: Option<String> = MatrixSessionEntity.sync_token;
+        let _: Option<crate::api::okra_wrap::Credentials> = MatrixSessionEntity.credentials;
+    }
+    {
+        let RoomEntity = None::<crate::api::okra_wrap::RoomEntity>.unwrap();
+        let _: String = RoomEntity.room_id;
+        let _: String = RoomEntity.display_name;
+        let _: Option<String> = RoomEntity.avatar_url;
+        let _: Option<String> = RoomEntity.last_event_text;
+        let _: Option<chrono::DateTime<chrono::Utc>> = RoomEntity.last_event_received_time;
+        let _: bool = RoomEntity.is_direct_chat;
+        let _: bool = RoomEntity.is_encrypted;
+        let _: Option<String> = RoomEntity.last_event;
+        let _: i32 = RoomEntity.participant_count;
+    }
+    {
+        let UserSessionEntity = None::<praia_matrix::features::matrix_client_registry::domain::entities::registry_session::UserSessionEntity>.unwrap();
+        let _: String = UserSessionEntity.access_token;
+        let _: Option<String> = UserSessionEntity.refresh_token;
+        let _: String = UserSessionEntity.device_id;
+        let _: String = UserSessionEntity.matrix_user_id;
+    }
+};
 
 // Section: dart2rust
 
@@ -286,7 +489,7 @@ impl SseDecode for StreamSink<i32, flutter_rust_bridge::for_generated::SseCodec>
 
 impl SseDecode
     for StreamSink<
-        Vec<crate::features::timeline::domain::entities::event_entity_delta::EventDeltaEntity>,
+        Vec<crate::api::okra_wrap::EventDeltaEntity>,
         flutter_rust_bridge::for_generated::SseCodec,
     >
 {
@@ -299,7 +502,7 @@ impl SseDecode
 
 impl SseDecode
     for StreamSink<
-        Vec<crate::features::rooms::domain::entities::room::RoomEntity>,
+        Vec<crate::api::okra_wrap::RoomEntity>,
         flutter_rust_bridge::for_generated::SseCodec,
     >
 {
@@ -325,29 +528,30 @@ impl SseDecode for bool {
     }
 }
 
-impl SseDecode for crate::features::matrix_client_registry::domain::entities::registry_session::ClientSessionEntity {
+impl SseDecode for praia_matrix::features::matrix_client_registry::domain::entities::registry_session::ClientSessionEntity {
                     // Codec=Sse (Serialization based), see doc to use other codecs
                     fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {let mut var_homeserver = <String>::sse_decode(deserializer);
 let mut var_sessionPath = <String>::sse_decode(deserializer);
 let mut var_passphrase = <String>::sse_decode(deserializer);
-return crate::features::matrix_client_registry::domain::entities::registry_session::ClientSessionEntity{homeserver: var_homeserver, session_path: var_sessionPath, passphrase: var_passphrase};}
+return praia_matrix::features::matrix_client_registry::domain::entities::registry_session::ClientSessionEntity{homeserver: var_homeserver, session_path: var_sessionPath, passphrase: var_passphrase};}
                 }
 
-impl SseDecode
-    for crate::features::matrix_client_registry::domain::entities::registry_session::Credentials
-{
+impl SseDecode for crate::api::okra_wrap::Credentials {
     // Codec=Sse (Serialization based), see doc to use other codecs
     fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
         let mut tag_ = <i32>::sse_decode(deserializer);
         match tag_ {
             0 => {
                 let mut var_field0 = <String>::sse_decode(deserializer);
-                return crate::features::matrix_client_registry::domain::entities::registry_session::Credentials::AccessToken(var_field0);
+                return crate::api::okra_wrap::Credentials::AccessToken(var_field0);
             }
             1 => {
                 let mut var_username = <String>::sse_decode(deserializer);
                 let mut var_password = <String>::sse_decode(deserializer);
-                return crate::features::matrix_client_registry::domain::entities::registry_session::Credentials::UserPassword{username: var_username, password: var_password};
+                return crate::api::okra_wrap::Credentials::UserPassword {
+                    username: var_username,
+                    password: var_password,
+                };
             }
             _ => {
                 unimplemented!("");
@@ -356,52 +560,43 @@ impl SseDecode
     }
 }
 
-impl SseDecode
-    for crate::features::timeline::domain::entities::event_entity_delta::EventDeltaEntity
-{
+impl SseDecode for crate::api::okra_wrap::EventDeltaEntity {
     // Codec=Sse (Serialization based), see doc to use other codecs
     fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
         let mut tag_ = <i32>::sse_decode(deserializer);
         match tag_ {
             0 => {
-                let mut var_value =
-                    <crate::features::timeline::domain::entities::event::EventEntity>::sse_decode(
-                        deserializer,
-                    );
-                return crate::features::timeline::domain::entities::event_entity_delta::EventDeltaEntity::PushFront{value: var_value};
+                let mut var_value = <crate::api::okra_wrap::EventEntity>::sse_decode(deserializer);
+                return crate::api::okra_wrap::EventDeltaEntity::PushFront { value: var_value };
             }
             1 => {
-                let mut var_value =
-                    <crate::features::timeline::domain::entities::event::EventEntity>::sse_decode(
-                        deserializer,
-                    );
-                return crate::features::timeline::domain::entities::event_entity_delta::EventDeltaEntity::PushBack{value: var_value};
+                let mut var_value = <crate::api::okra_wrap::EventEntity>::sse_decode(deserializer);
+                return crate::api::okra_wrap::EventDeltaEntity::PushBack { value: var_value };
             }
             2 => {
                 let mut var_index = <u32>::sse_decode(deserializer);
-                let mut var_value =
-                    <crate::features::timeline::domain::entities::event::EventEntity>::sse_decode(
-                        deserializer,
-                    );
-                return crate::features::timeline::domain::entities::event_entity_delta::EventDeltaEntity::Insert{index: var_index, value: var_value};
+                let mut var_value = <crate::api::okra_wrap::EventEntity>::sse_decode(deserializer);
+                return crate::api::okra_wrap::EventDeltaEntity::Insert {
+                    index: var_index,
+                    value: var_value,
+                };
             }
             3 => {
                 let mut var_index = <u32>::sse_decode(deserializer);
-                return crate::features::timeline::domain::entities::event_entity_delta::EventDeltaEntity::Remove{index: var_index};
+                return crate::api::okra_wrap::EventDeltaEntity::Remove { index: var_index };
             }
             4 => {
                 let mut var_index = <u32>::sse_decode(deserializer);
-                let mut var_value =
-                    <crate::features::timeline::domain::entities::event::EventEntity>::sse_decode(
-                        deserializer,
-                    );
-                return crate::features::timeline::domain::entities::event_entity_delta::EventDeltaEntity::Update{index: var_index, value: var_value};
+                let mut var_value = <crate::api::okra_wrap::EventEntity>::sse_decode(deserializer);
+                return crate::api::okra_wrap::EventDeltaEntity::Update {
+                    index: var_index,
+                    value: var_value,
+                };
             }
             5 => {
-                let mut var_items = <Vec<
-                    crate::features::timeline::domain::entities::event::EventEntity,
-                >>::sse_decode(deserializer);
-                return crate::features::timeline::domain::entities::event_entity_delta::EventDeltaEntity::Reset{items: var_items};
+                let mut var_items =
+                    <Vec<crate::api::okra_wrap::EventEntity>>::sse_decode(deserializer);
+                return crate::api::okra_wrap::EventDeltaEntity::Reset { items: var_items };
             }
             _ => {
                 unimplemented!("");
@@ -410,7 +605,7 @@ impl SseDecode
     }
 }
 
-impl SseDecode for crate::features::timeline::domain::entities::event::EventEntity {
+impl SseDecode for crate::api::okra_wrap::EventEntity {
     // Codec=Sse (Serialization based), see doc to use other codecs
     fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
         let mut var_id = <String>::sse_decode(deserializer);
@@ -427,7 +622,7 @@ impl SseDecode for crate::features::timeline::domain::entities::event::EventEnti
         let mut var_isEncrypted = <bool>::sse_decode(deserializer);
         let mut var_fileInfo =
             <Option<std::collections::HashMap<String, String>>>::sse_decode(deserializer);
-        return crate::features::timeline::domain::entities::event::EventEntity {
+        return crate::api::okra_wrap::EventEntity {
             id: var_id,
             sender_id: var_senderId,
             sender_display_name: var_senderDisplayName,
@@ -459,31 +654,29 @@ impl SseDecode for i64 {
     }
 }
 
-impl SseDecode
-    for Vec<crate::features::timeline::domain::entities::event_entity_delta::EventDeltaEntity>
-{
+impl SseDecode for Vec<crate::api::okra_wrap::EventDeltaEntity> {
     // Codec=Sse (Serialization based), see doc to use other codecs
     fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
         let mut len_ = <i32>::sse_decode(deserializer);
         let mut ans_ = vec![];
         for idx_ in 0..len_ {
-            ans_.push(<crate::features::timeline::domain::entities::event_entity_delta::EventDeltaEntity>::sse_decode(deserializer));
+            ans_.push(<crate::api::okra_wrap::EventDeltaEntity>::sse_decode(
+                deserializer,
+            ));
         }
         return ans_;
     }
 }
 
-impl SseDecode for Vec<crate::features::timeline::domain::entities::event::EventEntity> {
+impl SseDecode for Vec<crate::api::okra_wrap::EventEntity> {
     // Codec=Sse (Serialization based), see doc to use other codecs
     fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
         let mut len_ = <i32>::sse_decode(deserializer);
         let mut ans_ = vec![];
         for idx_ in 0..len_ {
-            ans_.push(
-                <crate::features::timeline::domain::entities::event::EventEntity>::sse_decode(
-                    deserializer,
-                ),
-            );
+            ans_.push(<crate::api::okra_wrap::EventEntity>::sse_decode(
+                deserializer,
+            ));
         }
         return ans_;
     }
@@ -513,29 +706,27 @@ impl SseDecode for Vec<(String, String)> {
     }
 }
 
-impl SseDecode for Vec<crate::features::rooms::domain::entities::room::RoomEntity> {
+impl SseDecode for Vec<crate::api::okra_wrap::RoomEntity> {
     // Codec=Sse (Serialization based), see doc to use other codecs
     fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
         let mut len_ = <i32>::sse_decode(deserializer);
         let mut ans_ = vec![];
         for idx_ in 0..len_ {
-            ans_.push(
-                <crate::features::rooms::domain::entities::room::RoomEntity>::sse_decode(
-                    deserializer,
-                ),
-            );
+            ans_.push(<crate::api::okra_wrap::RoomEntity>::sse_decode(
+                deserializer,
+            ));
         }
         return ans_;
     }
 }
 
-impl SseDecode for crate::features::matrix_client_registry::domain::entities::registry_session::MatrixSessionEntity {
+impl SseDecode for praia_matrix::features::matrix_client_registry::domain::entities::registry_session::MatrixSessionEntity {
                     // Codec=Sse (Serialization based), see doc to use other codecs
-                    fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {let mut var_clientSession = <crate::features::matrix_client_registry::domain::entities::registry_session::ClientSessionEntity>::sse_decode(deserializer);
-let mut var_userSession = <Option<crate::features::matrix_client_registry::domain::entities::registry_session::UserSessionEntity>>::sse_decode(deserializer);
+                    fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {let mut var_clientSession = <praia_matrix::features::matrix_client_registry::domain::entities::registry_session::ClientSessionEntity>::sse_decode(deserializer);
+let mut var_userSession = <Option<praia_matrix::features::matrix_client_registry::domain::entities::registry_session::UserSessionEntity>>::sse_decode(deserializer);
 let mut var_syncToken = <Option<String>>::sse_decode(deserializer);
-let mut var_credentials = <Option<crate::features::matrix_client_registry::domain::entities::registry_session::Credentials>>::sse_decode(deserializer);
-return crate::features::matrix_client_registry::domain::entities::registry_session::MatrixSessionEntity{client_session: var_clientSession, user_session: var_userSession, sync_token: var_syncToken, credentials: var_credentials};}
+let mut var_credentials = <Option<crate::api::okra_wrap::Credentials>>::sse_decode(deserializer);
+return praia_matrix::features::matrix_client_registry::domain::entities::registry_session::MatrixSessionEntity{client_session: var_clientSession, user_session: var_userSession, sync_token: var_syncToken, credentials: var_credentials};}
                 }
 
 impl SseDecode for Option<std::collections::HashMap<String, String>> {
@@ -573,25 +764,23 @@ impl SseDecode for Option<chrono::DateTime<chrono::Utc>> {
     }
 }
 
-impl SseDecode
-    for Option<
-        crate::features::matrix_client_registry::domain::entities::registry_session::Credentials,
-    >
-{
+impl SseDecode for Option<crate::api::okra_wrap::Credentials> {
     // Codec=Sse (Serialization based), see doc to use other codecs
     fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
         if (<bool>::sse_decode(deserializer)) {
-            return Some(<crate::features::matrix_client_registry::domain::entities::registry_session::Credentials>::sse_decode(deserializer));
+            return Some(<crate::api::okra_wrap::Credentials>::sse_decode(
+                deserializer,
+            ));
         } else {
             return None;
         }
     }
 }
 
-impl SseDecode for Option<crate::features::matrix_client_registry::domain::entities::registry_session::UserSessionEntity> {
+impl SseDecode for Option<praia_matrix::features::matrix_client_registry::domain::entities::registry_session::UserSessionEntity> {
                     // Codec=Sse (Serialization based), see doc to use other codecs
                     fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {if (<bool>::sse_decode(deserializer)) {
-                return Some(<crate::features::matrix_client_registry::domain::entities::registry_session::UserSessionEntity>::sse_decode(deserializer));
+                return Some(<praia_matrix::features::matrix_client_registry::domain::entities::registry_session::UserSessionEntity>::sse_decode(deserializer));
             } else {
                 return None;
             }}
@@ -606,7 +795,7 @@ impl SseDecode for (String, String) {
     }
 }
 
-impl SseDecode for crate::features::rooms::domain::entities::room::RoomEntity {
+impl SseDecode for crate::api::okra_wrap::RoomEntity {
     // Codec=Sse (Serialization based), see doc to use other codecs
     fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
         let mut var_roomId = <String>::sse_decode(deserializer);
@@ -619,7 +808,7 @@ impl SseDecode for crate::features::rooms::domain::entities::room::RoomEntity {
         let mut var_isEncrypted = <bool>::sse_decode(deserializer);
         let mut var_lastEvent = <Option<String>>::sse_decode(deserializer);
         let mut var_participantCount = <i32>::sse_decode(deserializer);
-        return crate::features::rooms::domain::entities::room::RoomEntity {
+        return crate::api::okra_wrap::RoomEntity {
             room_id: var_roomId,
             display_name: var_displayName,
             avatar_url: var_avatarUrl,
@@ -652,13 +841,13 @@ impl SseDecode for () {
     fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {}
 }
 
-impl SseDecode for crate::features::matrix_client_registry::domain::entities::registry_session::UserSessionEntity {
+impl SseDecode for praia_matrix::features::matrix_client_registry::domain::entities::registry_session::UserSessionEntity {
                     // Codec=Sse (Serialization based), see doc to use other codecs
                     fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {let mut var_accessToken = <String>::sse_decode(deserializer);
 let mut var_refreshToken = <Option<String>>::sse_decode(deserializer);
 let mut var_deviceId = <String>::sse_decode(deserializer);
 let mut var_matrixUserId = <String>::sse_decode(deserializer);
-return crate::features::matrix_client_registry::domain::entities::registry_session::UserSessionEntity{access_token: var_accessToken, refresh_token: var_refreshToken, device_id: var_deviceId, matrix_user_id: var_matrixUserId};}
+return praia_matrix::features::matrix_client_registry::domain::entities::registry_session::UserSessionEntity{access_token: var_accessToken, refresh_token: var_refreshToken, device_id: var_deviceId, matrix_user_id: var_matrixUserId};}
                 }
 
 fn pde_ffi_dispatcher_primary_impl(
@@ -670,26 +859,18 @@ fn pde_ffi_dispatcher_primary_impl(
 ) {
     // Codec=Pde (Serialization + dispatch), see doc to use other codecs
     match func_id {
-        1 => wire__crate__api__okra_wrap__fetch_room_events_by_room_id_impl(
-            port,
-            ptr,
-            rust_vec_len,
-            data_len,
-        ),
-        2 => wire__crate__api__okra_wrap__init_app_impl(port, ptr, rust_vec_len, data_len),
-        3 => wire__crate__api__okra_wrap__register_matrix_client_impl(
-            port,
-            ptr,
-            rust_vec_len,
-            data_len,
-        ),
-        4 => wire__crate__api__okra_wrap__sync_events_impl(port, ptr, rust_vec_len, data_len),
-        5 => {
-            wire__crate__api__okra_wrap__sync_rooms_by_space_impl(port, ptr, rust_vec_len, data_len)
-        }
-        6 => wire__crate__api__okra_wrap__tick_impl(port, ptr, rust_vec_len, data_len),
-        _ => unreachable!(),
-    }
+                        1 => wire__praia_matrix__features__matrix_client_registry__domain__entities__registry_session__client_session_entity_new_impl(port, ptr, rust_vec_len, data_len),
+2 => wire__crate__api__okra_wrap__fetch_room_events_by_room_id_impl(port, ptr, rust_vec_len, data_len),
+3 => wire__crate__api__okra_wrap__init_app_impl(port, ptr, rust_vec_len, data_len),
+4 => wire__crate__api__okra_wrap__map_credentials_impl(port, ptr, rust_vec_len, data_len),
+5 => wire__praia_matrix__features__matrix_client_registry__domain__entities__registry_session__matrix_session_entity_new_impl(port, ptr, rust_vec_len, data_len),
+6 => wire__crate__api__okra_wrap__register_matrix_client_impl(port, ptr, rust_vec_len, data_len),
+7 => wire__crate__api__okra_wrap__sync_events_impl(port, ptr, rust_vec_len, data_len),
+8 => wire__crate__api__okra_wrap__sync_rooms_by_space_impl(port, ptr, rust_vec_len, data_len),
+9 => wire__crate__api__okra_wrap__tick_impl(port, ptr, rust_vec_len, data_len),
+10 => wire__praia_matrix__features__matrix_client_registry__domain__entities__registry_session__user_session_entity_new_impl(port, ptr, rust_vec_len, data_len),
+                        _ => unreachable!(),
+                    }
 }
 
 fn pde_ffi_dispatcher_sync_impl(
@@ -707,183 +888,188 @@ fn pde_ffi_dispatcher_sync_impl(
 // Section: rust2dart
 
 // Codec=Dco (DartCObject based), see doc to use other codecs
-impl flutter_rust_bridge::IntoDart for crate::features::matrix_client_registry::domain::entities::registry_session::ClientSessionEntity {
+impl flutter_rust_bridge::IntoDart for FrbWrapper<praia_matrix::features::matrix_client_registry::domain::entities::registry_session::ClientSessionEntity> {
                 fn into_dart(self) -> flutter_rust_bridge::for_generated::DartAbi {
                     [
-                    self.homeserver.into_into_dart().into_dart(),
-self.session_path.into_into_dart().into_dart(),
-self.passphrase.into_into_dart().into_dart()
+                    self.0.homeserver.into_into_dart().into_dart(),
+self.0.session_path.into_into_dart().into_dart(),
+self.0.passphrase.into_into_dart().into_dart()
                 ].into_dart()
                 }
             }
-impl flutter_rust_bridge::for_generated::IntoDartExceptPrimitive for crate::features::matrix_client_registry::domain::entities::registry_session::ClientSessionEntity {}
-impl flutter_rust_bridge::IntoIntoDart<crate::features::matrix_client_registry::domain::entities::registry_session::ClientSessionEntity> for crate::features::matrix_client_registry::domain::entities::registry_session::ClientSessionEntity {
-            fn into_into_dart(self) -> crate::features::matrix_client_registry::domain::entities::registry_session::ClientSessionEntity {
-                self
+impl flutter_rust_bridge::for_generated::IntoDartExceptPrimitive for FrbWrapper<praia_matrix::features::matrix_client_registry::domain::entities::registry_session::ClientSessionEntity> {}
+impl flutter_rust_bridge::IntoIntoDart<FrbWrapper<praia_matrix::features::matrix_client_registry::domain::entities::registry_session::ClientSessionEntity>> for praia_matrix::features::matrix_client_registry::domain::entities::registry_session::ClientSessionEntity {
+            fn into_into_dart(self) -> FrbWrapper<praia_matrix::features::matrix_client_registry::domain::entities::registry_session::ClientSessionEntity> {
+                self.into()
             }
         }
 // Codec=Dco (DartCObject based), see doc to use other codecs
-impl flutter_rust_bridge::IntoDart
-    for crate::features::matrix_client_registry::domain::entities::registry_session::Credentials
-{
+impl flutter_rust_bridge::IntoDart for FrbWrapper<crate::api::okra_wrap::Credentials> {
     fn into_dart(self) -> flutter_rust_bridge::for_generated::DartAbi {
-        match self {crate::features::matrix_client_registry::domain::entities::registry_session::Credentials::AccessToken(field0) => { [0.into_dart(),
-field0.into_into_dart().into_dart()].into_dart() }
-crate::features::matrix_client_registry::domain::entities::registry_session::Credentials::UserPassword{username,password} => { [1.into_dart(),
-username.into_into_dart().into_dart(),
-password.into_into_dart().into_dart()].into_dart() }
- _ => { unimplemented!(""); }}
+        match self.0 {
+            crate::api::okra_wrap::Credentials::AccessToken(field0) => {
+                [0.into_dart(), field0.into_into_dart().into_dart()].into_dart()
+            }
+            crate::api::okra_wrap::Credentials::UserPassword { username, password } => [
+                1.into_dart(),
+                username.into_into_dart().into_dart(),
+                password.into_into_dart().into_dart(),
+            ]
+            .into_dart(),
+            _ => {
+                unimplemented!("");
+            }
+        }
     }
 }
 impl flutter_rust_bridge::for_generated::IntoDartExceptPrimitive
-    for crate::features::matrix_client_registry::domain::entities::registry_session::Credentials
+    for FrbWrapper<crate::api::okra_wrap::Credentials>
 {
 }
-impl
-    flutter_rust_bridge::IntoIntoDart<
-        crate::features::matrix_client_registry::domain::entities::registry_session::Credentials,
-    > for crate::features::matrix_client_registry::domain::entities::registry_session::Credentials
+impl flutter_rust_bridge::IntoIntoDart<FrbWrapper<crate::api::okra_wrap::Credentials>>
+    for crate::api::okra_wrap::Credentials
 {
-    fn into_into_dart(
-        self,
-    ) -> crate::features::matrix_client_registry::domain::entities::registry_session::Credentials
-    {
-        self
+    fn into_into_dart(self) -> FrbWrapper<crate::api::okra_wrap::Credentials> {
+        self.into()
     }
 }
 // Codec=Dco (DartCObject based), see doc to use other codecs
-impl flutter_rust_bridge::IntoDart
-    for crate::features::timeline::domain::entities::event_entity_delta::EventDeltaEntity
-{
+impl flutter_rust_bridge::IntoDart for FrbWrapper<crate::api::okra_wrap::EventDeltaEntity> {
     fn into_dart(self) -> flutter_rust_bridge::for_generated::DartAbi {
-        match self {crate::features::timeline::domain::entities::event_entity_delta::EventDeltaEntity::PushFront{value} => { [0.into_dart(),
-value.into_into_dart().into_dart()].into_dart() }
-crate::features::timeline::domain::entities::event_entity_delta::EventDeltaEntity::PushBack{value} => { [1.into_dart(),
-value.into_into_dart().into_dart()].into_dart() }
-crate::features::timeline::domain::entities::event_entity_delta::EventDeltaEntity::Insert{index,value} => { [2.into_dart(),
-index.into_into_dart().into_dart(),
-value.into_into_dart().into_dart()].into_dart() }
-crate::features::timeline::domain::entities::event_entity_delta::EventDeltaEntity::Remove{index} => { [3.into_dart(),
-index.into_into_dart().into_dart()].into_dart() }
-crate::features::timeline::domain::entities::event_entity_delta::EventDeltaEntity::Update{index,value} => { [4.into_dart(),
-index.into_into_dart().into_dart(),
-value.into_into_dart().into_dart()].into_dart() }
-crate::features::timeline::domain::entities::event_entity_delta::EventDeltaEntity::Reset{items} => { [5.into_dart(),
-items.into_into_dart().into_dart()].into_dart() }
- _ => { unimplemented!(""); }}
+        match self.0 {
+            crate::api::okra_wrap::EventDeltaEntity::PushFront { value } => {
+                [0.into_dart(), value.into_into_dart().into_dart()].into_dart()
+            }
+            crate::api::okra_wrap::EventDeltaEntity::PushBack { value } => {
+                [1.into_dart(), value.into_into_dart().into_dart()].into_dart()
+            }
+            crate::api::okra_wrap::EventDeltaEntity::Insert { index, value } => [
+                2.into_dart(),
+                index.into_into_dart().into_dart(),
+                value.into_into_dart().into_dart(),
+            ]
+            .into_dart(),
+            crate::api::okra_wrap::EventDeltaEntity::Remove { index } => {
+                [3.into_dart(), index.into_into_dart().into_dart()].into_dart()
+            }
+            crate::api::okra_wrap::EventDeltaEntity::Update { index, value } => [
+                4.into_dart(),
+                index.into_into_dart().into_dart(),
+                value.into_into_dart().into_dart(),
+            ]
+            .into_dart(),
+            crate::api::okra_wrap::EventDeltaEntity::Reset { items } => {
+                [5.into_dart(), items.into_into_dart().into_dart()].into_dart()
+            }
+            _ => {
+                unimplemented!("");
+            }
+        }
     }
 }
 impl flutter_rust_bridge::for_generated::IntoDartExceptPrimitive
-    for crate::features::timeline::domain::entities::event_entity_delta::EventDeltaEntity
+    for FrbWrapper<crate::api::okra_wrap::EventDeltaEntity>
 {
 }
-impl
-    flutter_rust_bridge::IntoIntoDart<
-        crate::features::timeline::domain::entities::event_entity_delta::EventDeltaEntity,
-    > for crate::features::timeline::domain::entities::event_entity_delta::EventDeltaEntity
+impl flutter_rust_bridge::IntoIntoDart<FrbWrapper<crate::api::okra_wrap::EventDeltaEntity>>
+    for crate::api::okra_wrap::EventDeltaEntity
 {
-    fn into_into_dart(
-        self,
-    ) -> crate::features::timeline::domain::entities::event_entity_delta::EventDeltaEntity {
-        self
+    fn into_into_dart(self) -> FrbWrapper<crate::api::okra_wrap::EventDeltaEntity> {
+        self.into()
     }
 }
 // Codec=Dco (DartCObject based), see doc to use other codecs
-impl flutter_rust_bridge::IntoDart
-    for crate::features::timeline::domain::entities::event::EventEntity
-{
+impl flutter_rust_bridge::IntoDart for FrbWrapper<crate::api::okra_wrap::EventEntity> {
     fn into_dart(self) -> flutter_rust_bridge::for_generated::DartAbi {
         [
-            self.id.into_into_dart().into_dart(),
-            self.sender_id.into_into_dart().into_dart(),
-            self.sender_display_name.into_into_dart().into_dart(),
-            self.sender_avatar_url.into_into_dart().into_dart(),
-            self.content.into_into_dart().into_dart(),
-            self.formatted_content.into_into_dart().into_dart(),
-            self.timestamp.into_into_dart().into_dart(),
-            self.is_redacted.into_into_dart().into_dart(),
-            self.event_type.into_into_dart().into_dart(),
-            self.message_type.into_into_dart().into_dart(),
-            self.status.into_into_dart().into_dart(),
-            self.is_encrypted.into_into_dart().into_dart(),
-            self.file_info.into_into_dart().into_dart(),
+            self.0.id.into_into_dart().into_dart(),
+            self.0.sender_id.into_into_dart().into_dart(),
+            self.0.sender_display_name.into_into_dart().into_dart(),
+            self.0.sender_avatar_url.into_into_dart().into_dart(),
+            self.0.content.into_into_dart().into_dart(),
+            self.0.formatted_content.into_into_dart().into_dart(),
+            self.0.timestamp.into_into_dart().into_dart(),
+            self.0.is_redacted.into_into_dart().into_dart(),
+            self.0.event_type.into_into_dart().into_dart(),
+            self.0.message_type.into_into_dart().into_dart(),
+            self.0.status.into_into_dart().into_dart(),
+            self.0.is_encrypted.into_into_dart().into_dart(),
+            self.0.file_info.into_into_dart().into_dart(),
         ]
         .into_dart()
     }
 }
 impl flutter_rust_bridge::for_generated::IntoDartExceptPrimitive
-    for crate::features::timeline::domain::entities::event::EventEntity
+    for FrbWrapper<crate::api::okra_wrap::EventEntity>
 {
 }
-impl
-    flutter_rust_bridge::IntoIntoDart<
-        crate::features::timeline::domain::entities::event::EventEntity,
-    > for crate::features::timeline::domain::entities::event::EventEntity
+impl flutter_rust_bridge::IntoIntoDart<FrbWrapper<crate::api::okra_wrap::EventEntity>>
+    for crate::api::okra_wrap::EventEntity
 {
-    fn into_into_dart(self) -> crate::features::timeline::domain::entities::event::EventEntity {
-        self
+    fn into_into_dart(self) -> FrbWrapper<crate::api::okra_wrap::EventEntity> {
+        self.into()
     }
 }
 // Codec=Dco (DartCObject based), see doc to use other codecs
-impl flutter_rust_bridge::IntoDart for crate::features::matrix_client_registry::domain::entities::registry_session::MatrixSessionEntity {
+impl flutter_rust_bridge::IntoDart for FrbWrapper<praia_matrix::features::matrix_client_registry::domain::entities::registry_session::MatrixSessionEntity> {
                 fn into_dart(self) -> flutter_rust_bridge::for_generated::DartAbi {
                     [
-                    self.client_session.into_into_dart().into_dart(),
-self.user_session.into_into_dart().into_dart(),
-self.sync_token.into_into_dart().into_dart(),
-self.credentials.into_into_dart().into_dart()
+                    self.0.client_session.into_into_dart().into_dart(),
+self.0.user_session.into_into_dart().into_dart(),
+self.0.sync_token.into_into_dart().into_dart(),
+self.0.credentials.into_into_dart().into_dart()
                 ].into_dart()
                 }
             }
-impl flutter_rust_bridge::for_generated::IntoDartExceptPrimitive for crate::features::matrix_client_registry::domain::entities::registry_session::MatrixSessionEntity {}
-impl flutter_rust_bridge::IntoIntoDart<crate::features::matrix_client_registry::domain::entities::registry_session::MatrixSessionEntity> for crate::features::matrix_client_registry::domain::entities::registry_session::MatrixSessionEntity {
-            fn into_into_dart(self) -> crate::features::matrix_client_registry::domain::entities::registry_session::MatrixSessionEntity {
-                self
+impl flutter_rust_bridge::for_generated::IntoDartExceptPrimitive for FrbWrapper<praia_matrix::features::matrix_client_registry::domain::entities::registry_session::MatrixSessionEntity> {}
+impl flutter_rust_bridge::IntoIntoDart<FrbWrapper<praia_matrix::features::matrix_client_registry::domain::entities::registry_session::MatrixSessionEntity>> for praia_matrix::features::matrix_client_registry::domain::entities::registry_session::MatrixSessionEntity {
+            fn into_into_dart(self) -> FrbWrapper<praia_matrix::features::matrix_client_registry::domain::entities::registry_session::MatrixSessionEntity> {
+                self.into()
             }
         }
 // Codec=Dco (DartCObject based), see doc to use other codecs
-impl flutter_rust_bridge::IntoDart for crate::features::rooms::domain::entities::room::RoomEntity {
+impl flutter_rust_bridge::IntoDart for FrbWrapper<crate::api::okra_wrap::RoomEntity> {
     fn into_dart(self) -> flutter_rust_bridge::for_generated::DartAbi {
         [
-            self.room_id.into_into_dart().into_dart(),
-            self.display_name.into_into_dart().into_dart(),
-            self.avatar_url.into_into_dart().into_dart(),
-            self.last_event_text.into_into_dart().into_dart(),
-            self.last_event_received_time.into_into_dart().into_dart(),
-            self.is_direct_chat.into_into_dart().into_dart(),
-            self.is_encrypted.into_into_dart().into_dart(),
-            self.last_event.into_into_dart().into_dart(),
-            self.participant_count.into_into_dart().into_dart(),
+            self.0.room_id.into_into_dart().into_dart(),
+            self.0.display_name.into_into_dart().into_dart(),
+            self.0.avatar_url.into_into_dart().into_dart(),
+            self.0.last_event_text.into_into_dart().into_dart(),
+            self.0.last_event_received_time.into_into_dart().into_dart(),
+            self.0.is_direct_chat.into_into_dart().into_dart(),
+            self.0.is_encrypted.into_into_dart().into_dart(),
+            self.0.last_event.into_into_dart().into_dart(),
+            self.0.participant_count.into_into_dart().into_dart(),
         ]
         .into_dart()
     }
 }
 impl flutter_rust_bridge::for_generated::IntoDartExceptPrimitive
-    for crate::features::rooms::domain::entities::room::RoomEntity
+    for FrbWrapper<crate::api::okra_wrap::RoomEntity>
 {
 }
-impl flutter_rust_bridge::IntoIntoDart<crate::features::rooms::domain::entities::room::RoomEntity>
-    for crate::features::rooms::domain::entities::room::RoomEntity
+impl flutter_rust_bridge::IntoIntoDart<FrbWrapper<crate::api::okra_wrap::RoomEntity>>
+    for crate::api::okra_wrap::RoomEntity
 {
-    fn into_into_dart(self) -> crate::features::rooms::domain::entities::room::RoomEntity {
-        self
+    fn into_into_dart(self) -> FrbWrapper<crate::api::okra_wrap::RoomEntity> {
+        self.into()
     }
 }
 // Codec=Dco (DartCObject based), see doc to use other codecs
-impl flutter_rust_bridge::IntoDart for crate::features::matrix_client_registry::domain::entities::registry_session::UserSessionEntity {
+impl flutter_rust_bridge::IntoDart for FrbWrapper<praia_matrix::features::matrix_client_registry::domain::entities::registry_session::UserSessionEntity> {
                 fn into_dart(self) -> flutter_rust_bridge::for_generated::DartAbi {
                     [
-                    self.access_token.into_into_dart().into_dart(),
-self.refresh_token.into_into_dart().into_dart(),
-self.device_id.into_into_dart().into_dart(),
-self.matrix_user_id.into_into_dart().into_dart()
+                    self.0.access_token.into_into_dart().into_dart(),
+self.0.refresh_token.into_into_dart().into_dart(),
+self.0.device_id.into_into_dart().into_dart(),
+self.0.matrix_user_id.into_into_dart().into_dart()
                 ].into_dart()
                 }
             }
-impl flutter_rust_bridge::for_generated::IntoDartExceptPrimitive for crate::features::matrix_client_registry::domain::entities::registry_session::UserSessionEntity {}
-impl flutter_rust_bridge::IntoIntoDart<crate::features::matrix_client_registry::domain::entities::registry_session::UserSessionEntity> for crate::features::matrix_client_registry::domain::entities::registry_session::UserSessionEntity {
-            fn into_into_dart(self) -> crate::features::matrix_client_registry::domain::entities::registry_session::UserSessionEntity {
-                self
+impl flutter_rust_bridge::for_generated::IntoDartExceptPrimitive for FrbWrapper<praia_matrix::features::matrix_client_registry::domain::entities::registry_session::UserSessionEntity> {}
+impl flutter_rust_bridge::IntoIntoDart<FrbWrapper<praia_matrix::features::matrix_client_registry::domain::entities::registry_session::UserSessionEntity>> for praia_matrix::features::matrix_client_registry::domain::entities::registry_session::UserSessionEntity {
+            fn into_into_dart(self) -> FrbWrapper<praia_matrix::features::matrix_client_registry::domain::entities::registry_session::UserSessionEntity> {
+                self.into()
             }
         }
 
@@ -924,7 +1110,7 @@ impl SseEncode for StreamSink<i32, flutter_rust_bridge::for_generated::SseCodec>
 
 impl SseEncode
     for StreamSink<
-        Vec<crate::features::timeline::domain::entities::event_entity_delta::EventDeltaEntity>,
+        Vec<crate::api::okra_wrap::EventDeltaEntity>,
         flutter_rust_bridge::for_generated::SseCodec,
     >
 {
@@ -936,7 +1122,7 @@ impl SseEncode
 
 impl SseEncode
     for StreamSink<
-        Vec<crate::features::rooms::domain::entities::room::RoomEntity>,
+        Vec<crate::api::okra_wrap::RoomEntity>,
         flutter_rust_bridge::for_generated::SseCodec,
     >
 {
@@ -960,51 +1146,71 @@ impl SseEncode for bool {
     }
 }
 
-impl SseEncode for crate::features::matrix_client_registry::domain::entities::registry_session::ClientSessionEntity {
+impl SseEncode for praia_matrix::features::matrix_client_registry::domain::entities::registry_session::ClientSessionEntity {
                     // Codec=Sse (Serialization based), see doc to use other codecs
                     fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {<String>::sse_encode(self.homeserver, serializer);
 <String>::sse_encode(self.session_path, serializer);
 <String>::sse_encode(self.passphrase, serializer);}
                 }
 
-impl SseEncode
-    for crate::features::matrix_client_registry::domain::entities::registry_session::Credentials
-{
+impl SseEncode for crate::api::okra_wrap::Credentials {
     // Codec=Sse (Serialization based), see doc to use other codecs
     fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
-        match self {crate::features::matrix_client_registry::domain::entities::registry_session::Credentials::AccessToken(field0) => { <i32>::sse_encode(0, serializer); <String>::sse_encode(field0, serializer);
- }
-crate::features::matrix_client_registry::domain::entities::registry_session::Credentials::UserPassword{username,password} => { <i32>::sse_encode(1, serializer); <String>::sse_encode(username, serializer);
-<String>::sse_encode(password, serializer);
- }
- _ => { unimplemented!(""); }}
+        match self {
+            crate::api::okra_wrap::Credentials::AccessToken(field0) => {
+                <i32>::sse_encode(0, serializer);
+                <String>::sse_encode(field0, serializer);
+            }
+            crate::api::okra_wrap::Credentials::UserPassword { username, password } => {
+                <i32>::sse_encode(1, serializer);
+                <String>::sse_encode(username, serializer);
+                <String>::sse_encode(password, serializer);
+            }
+            _ => {
+                unimplemented!("");
+            }
+        }
     }
 }
 
-impl SseEncode
-    for crate::features::timeline::domain::entities::event_entity_delta::EventDeltaEntity
-{
+impl SseEncode for crate::api::okra_wrap::EventDeltaEntity {
     // Codec=Sse (Serialization based), see doc to use other codecs
     fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
-        match self {crate::features::timeline::domain::entities::event_entity_delta::EventDeltaEntity::PushFront{value} => { <i32>::sse_encode(0, serializer); <crate::features::timeline::domain::entities::event::EventEntity>::sse_encode(value, serializer);
- }
-crate::features::timeline::domain::entities::event_entity_delta::EventDeltaEntity::PushBack{value} => { <i32>::sse_encode(1, serializer); <crate::features::timeline::domain::entities::event::EventEntity>::sse_encode(value, serializer);
- }
-crate::features::timeline::domain::entities::event_entity_delta::EventDeltaEntity::Insert{index,value} => { <i32>::sse_encode(2, serializer); <u32>::sse_encode(index, serializer);
-<crate::features::timeline::domain::entities::event::EventEntity>::sse_encode(value, serializer);
- }
-crate::features::timeline::domain::entities::event_entity_delta::EventDeltaEntity::Remove{index} => { <i32>::sse_encode(3, serializer); <u32>::sse_encode(index, serializer);
- }
-crate::features::timeline::domain::entities::event_entity_delta::EventDeltaEntity::Update{index,value} => { <i32>::sse_encode(4, serializer); <u32>::sse_encode(index, serializer);
-<crate::features::timeline::domain::entities::event::EventEntity>::sse_encode(value, serializer);
- }
-crate::features::timeline::domain::entities::event_entity_delta::EventDeltaEntity::Reset{items} => { <i32>::sse_encode(5, serializer); <Vec<crate::features::timeline::domain::entities::event::EventEntity>>::sse_encode(items, serializer);
- }
- _ => { unimplemented!(""); }}
+        match self {
+            crate::api::okra_wrap::EventDeltaEntity::PushFront { value } => {
+                <i32>::sse_encode(0, serializer);
+                <crate::api::okra_wrap::EventEntity>::sse_encode(value, serializer);
+            }
+            crate::api::okra_wrap::EventDeltaEntity::PushBack { value } => {
+                <i32>::sse_encode(1, serializer);
+                <crate::api::okra_wrap::EventEntity>::sse_encode(value, serializer);
+            }
+            crate::api::okra_wrap::EventDeltaEntity::Insert { index, value } => {
+                <i32>::sse_encode(2, serializer);
+                <u32>::sse_encode(index, serializer);
+                <crate::api::okra_wrap::EventEntity>::sse_encode(value, serializer);
+            }
+            crate::api::okra_wrap::EventDeltaEntity::Remove { index } => {
+                <i32>::sse_encode(3, serializer);
+                <u32>::sse_encode(index, serializer);
+            }
+            crate::api::okra_wrap::EventDeltaEntity::Update { index, value } => {
+                <i32>::sse_encode(4, serializer);
+                <u32>::sse_encode(index, serializer);
+                <crate::api::okra_wrap::EventEntity>::sse_encode(value, serializer);
+            }
+            crate::api::okra_wrap::EventDeltaEntity::Reset { items } => {
+                <i32>::sse_encode(5, serializer);
+                <Vec<crate::api::okra_wrap::EventEntity>>::sse_encode(items, serializer);
+            }
+            _ => {
+                unimplemented!("");
+            }
+        }
     }
 }
 
-impl SseEncode for crate::features::timeline::domain::entities::event::EventEntity {
+impl SseEncode for crate::api::okra_wrap::EventEntity {
     // Codec=Sse (Serialization based), see doc to use other codecs
     fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
         <String>::sse_encode(self.id, serializer);
@@ -1037,26 +1243,22 @@ impl SseEncode for i64 {
     }
 }
 
-impl SseEncode
-    for Vec<crate::features::timeline::domain::entities::event_entity_delta::EventDeltaEntity>
-{
+impl SseEncode for Vec<crate::api::okra_wrap::EventDeltaEntity> {
     // Codec=Sse (Serialization based), see doc to use other codecs
     fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
         <i32>::sse_encode(self.len() as _, serializer);
         for item in self {
-            <crate::features::timeline::domain::entities::event_entity_delta::EventDeltaEntity>::sse_encode(item, serializer);
+            <crate::api::okra_wrap::EventDeltaEntity>::sse_encode(item, serializer);
         }
     }
 }
 
-impl SseEncode for Vec<crate::features::timeline::domain::entities::event::EventEntity> {
+impl SseEncode for Vec<crate::api::okra_wrap::EventEntity> {
     // Codec=Sse (Serialization based), see doc to use other codecs
     fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
         <i32>::sse_encode(self.len() as _, serializer);
         for item in self {
-            <crate::features::timeline::domain::entities::event::EventEntity>::sse_encode(
-                item, serializer,
-            );
+            <crate::api::okra_wrap::EventEntity>::sse_encode(item, serializer);
         }
     }
 }
@@ -1081,24 +1283,22 @@ impl SseEncode for Vec<(String, String)> {
     }
 }
 
-impl SseEncode for Vec<crate::features::rooms::domain::entities::room::RoomEntity> {
+impl SseEncode for Vec<crate::api::okra_wrap::RoomEntity> {
     // Codec=Sse (Serialization based), see doc to use other codecs
     fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
         <i32>::sse_encode(self.len() as _, serializer);
         for item in self {
-            <crate::features::rooms::domain::entities::room::RoomEntity>::sse_encode(
-                item, serializer,
-            );
+            <crate::api::okra_wrap::RoomEntity>::sse_encode(item, serializer);
         }
     }
 }
 
-impl SseEncode for crate::features::matrix_client_registry::domain::entities::registry_session::MatrixSessionEntity {
+impl SseEncode for praia_matrix::features::matrix_client_registry::domain::entities::registry_session::MatrixSessionEntity {
                     // Codec=Sse (Serialization based), see doc to use other codecs
-                    fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {<crate::features::matrix_client_registry::domain::entities::registry_session::ClientSessionEntity>::sse_encode(self.client_session, serializer);
-<Option<crate::features::matrix_client_registry::domain::entities::registry_session::UserSessionEntity>>::sse_encode(self.user_session, serializer);
+                    fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {<praia_matrix::features::matrix_client_registry::domain::entities::registry_session::ClientSessionEntity>::sse_encode(self.client_session, serializer);
+<Option<praia_matrix::features::matrix_client_registry::domain::entities::registry_session::UserSessionEntity>>::sse_encode(self.user_session, serializer);
 <Option<String>>::sse_encode(self.sync_token, serializer);
-<Option<crate::features::matrix_client_registry::domain::entities::registry_session::Credentials>>::sse_encode(self.credentials, serializer);}
+<Option<crate::api::okra_wrap::Credentials>>::sse_encode(self.credentials, serializer);}
                 }
 
 impl SseEncode for Option<std::collections::HashMap<String, String>> {
@@ -1131,25 +1331,21 @@ impl SseEncode for Option<chrono::DateTime<chrono::Utc>> {
     }
 }
 
-impl SseEncode
-    for Option<
-        crate::features::matrix_client_registry::domain::entities::registry_session::Credentials,
-    >
-{
+impl SseEncode for Option<crate::api::okra_wrap::Credentials> {
     // Codec=Sse (Serialization based), see doc to use other codecs
     fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
         <bool>::sse_encode(self.is_some(), serializer);
         if let Some(value) = self {
-            <crate::features::matrix_client_registry::domain::entities::registry_session::Credentials>::sse_encode(value, serializer);
+            <crate::api::okra_wrap::Credentials>::sse_encode(value, serializer);
         }
     }
 }
 
-impl SseEncode for Option<crate::features::matrix_client_registry::domain::entities::registry_session::UserSessionEntity> {
+impl SseEncode for Option<praia_matrix::features::matrix_client_registry::domain::entities::registry_session::UserSessionEntity> {
                     // Codec=Sse (Serialization based), see doc to use other codecs
                     fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {<bool>::sse_encode(self.is_some(), serializer);
                 if let Some(value) = self {
-                    <crate::features::matrix_client_registry::domain::entities::registry_session::UserSessionEntity>::sse_encode(value, serializer);
+                    <praia_matrix::features::matrix_client_registry::domain::entities::registry_session::UserSessionEntity>::sse_encode(value, serializer);
                 }}
                 }
 
@@ -1161,7 +1357,7 @@ impl SseEncode for (String, String) {
     }
 }
 
-impl SseEncode for crate::features::rooms::domain::entities::room::RoomEntity {
+impl SseEncode for crate::api::okra_wrap::RoomEntity {
     // Codec=Sse (Serialization based), see doc to use other codecs
     fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
         <String>::sse_encode(self.room_id, serializer);
@@ -1198,7 +1394,7 @@ impl SseEncode for () {
     fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {}
 }
 
-impl SseEncode for crate::features::matrix_client_registry::domain::entities::registry_session::UserSessionEntity {
+impl SseEncode for praia_matrix::features::matrix_client_registry::domain::entities::registry_session::UserSessionEntity {
                     // Codec=Sse (Serialization based), see doc to use other codecs
                     fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {<String>::sse_encode(self.access_token, serializer);
 <Option<String>>::sse_encode(self.refresh_token, serializer);

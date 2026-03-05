@@ -2,8 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:matrix_rust_sdk_bridge/matrix_rust_sdk_bridge.dart';
 
-import 'package:path_provider/path_provider.dart';
-
 late Stream<String> events;
 late Stream<List<RoomEntity>> sEvent;
 

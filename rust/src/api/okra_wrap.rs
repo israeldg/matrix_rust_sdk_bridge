@@ -1,33 +1,75 @@
 use anyhow::{Ok, Result};
-
+use chrono::DateTime;
+use chrono::Utc;
+use flutter_rust_bridge::frb;
 use futures_util::pin_mut;
 use futures_util::StreamExt;
 use once_cell::sync::OnceCell;
+
+use std::collections::HashMap;
 use std::sync::Arc;
-
-// ========== Matrix SDK References ==========
-
-// ========== Matrix SDK References ==========
-
-use crate::core::app_context::AppContext;
-// ========== Okra References ==========
-
-use crate::features::matrix_client_registry::domain::entities::registry_session::MatrixSessionEntity;
-use crate::features::timeline::domain::entities::event_entity_delta::EventDeltaEntity;
-
-use crate::features::rooms::domain::entities::room::RoomEntity;
-
 use std::{thread::sleep, time::Duration};
 
 use crate::frb_generated::StreamSink;
-// ========== Okra References ==========
+// ========== Praia References ==========
+use praia_matrix::core::app_context::AppContext;
+pub use praia_matrix::features::matrix_client_registry::domain::entities::registry_session::Credentials;
+pub use praia_matrix::features::matrix_client_registry::domain::entities::registry_session::MatrixSessionEntity;
+pub use praia_matrix::features::rooms::domain::entities::room::RoomEntity;
+pub use praia_matrix::features::timeline::domain::entities::event::EventEntity;
+pub use praia_matrix::features::timeline::domain::entities::event_entity_delta::EventDeltaEntity;
+// ========== END Praia References ==========
 
 // Flutter Rust Bridge Init
-#[flutter_rust_bridge::frb(init)]
+#[frb(init)]
 pub fn init_app() {
     // Default utilities - feel free to customize
     flutter_rust_bridge::setup_default_user_utils();
 }
+
+#[frb(mirror(EventEntity))]
+pub struct _EventEntity {
+    pub id: String,
+    pub sender_id: String,
+    pub sender_display_name: Option<String>,
+    pub sender_avatar_url: Option<String>,
+    pub content: String,
+    pub formatted_content: Option<String>,
+    pub timestamp: Option<DateTime<Utc>>,
+    pub is_redacted: bool,
+    pub event_type: String,
+    pub message_type: String,
+    pub status: String,
+    pub is_encrypted: bool,
+    pub file_info: Option<HashMap<String, String>>,
+}
+#[frb(mirror(EventDeltaEntity))]
+pub enum _EventDeltaEntity {
+    PushFront { value: EventEntity },
+    PushBack { value: EventEntity },
+    Insert { index: u32, value: EventEntity },
+    Remove { index: u32 },
+    Update { index: u32, value: EventEntity },
+    Reset { items: Vec<EventEntity> },
+}
+#[frb(mirror(Credentials))]
+pub enum _Credentials {
+    AccessToken(String),
+    UserPassword { username: String, password: String },
+}
+#[frb(mirror(RoomEntity))]
+pub struct _RoomEntity {
+    pub room_id: String,
+    pub display_name: String,
+    pub avatar_url: Option<String>,
+    pub last_event_text: Option<String>,
+    pub last_event_received_time: Option<DateTime<Utc>>,
+    pub is_direct_chat: bool,
+    pub is_encrypted: bool,
+    pub last_event: Option<String>,
+    pub participant_count: i32,
+}
+// Flutter Rust Bridge Init
 
 // ========== Global app context singleton ==========
 static APP: OnceCell<Arc<AppContext>> = OnceCell::new();
@@ -140,5 +182,10 @@ pub fn tick(sink: StreamSink<i32>) -> Result<()> {
         }
         ticks += 1;
     }
+    Ok(())
+}
+
+pub async fn map_credentials(cred: Credentials) -> Result<()> {
+    println!("{:#?}", cred);
     Ok(())
 }

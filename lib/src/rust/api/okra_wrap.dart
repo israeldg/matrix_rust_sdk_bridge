@@ -3,12 +3,11 @@
 
 // ignore_for_file: invalid_use_of_internal_member, unused_import, unnecessary_import
 
-import '../features/matrix_client_registry/domain/entities/registry_session.dart';
-import '../features/rooms/domain/entities/room.dart';
-import '../features/timeline/domain/entities/event.dart';
-import '../features/timeline/domain/entities/event_entity_delta.dart';
 import '../frb_generated.dart';
+import '../third_party/praia_matrix/features/matrix_client_registry/domain/entities/registry_session.dart';
 import 'package:flutter_rust_bridge/flutter_rust_bridge_for_generated.dart';
+import 'package:freezed_annotation/freezed_annotation.dart' hide protected;
+part 'okra_wrap.freezed.dart';
 
 // These functions are ignored because they are not marked as `pub`: `global_app`
 
@@ -37,3 +36,158 @@ Stream<List<EventDeltaEntity>> fetchRoomEventsByRoomId({
 );
 
 Stream<int> tick() => RustLib.instance.api.crateApiOkraWrapTick();
+
+Future<void> mapCredentials({required Credentials cred}) =>
+    RustLib.instance.api.crateApiOkraWrapMapCredentials(cred: cred);
+
+@freezed
+sealed class Credentials with _$Credentials {
+  const Credentials._();
+
+  const factory Credentials.accessToken(String field0) =
+      Credentials_AccessToken;
+  const factory Credentials.userPassword({
+    required String username,
+    required String password,
+  }) = Credentials_UserPassword;
+}
+
+@freezed
+sealed class EventDeltaEntity with _$EventDeltaEntity {
+  const EventDeltaEntity._();
+
+  const factory EventDeltaEntity.pushFront({required EventEntity value}) =
+      EventDeltaEntity_PushFront;
+  const factory EventDeltaEntity.pushBack({required EventEntity value}) =
+      EventDeltaEntity_PushBack;
+  const factory EventDeltaEntity.insert({
+    required int index,
+    required EventEntity value,
+  }) = EventDeltaEntity_Insert;
+  const factory EventDeltaEntity.remove({required int index}) =
+      EventDeltaEntity_Remove;
+  const factory EventDeltaEntity.update({
+    required int index,
+    required EventEntity value,
+  }) = EventDeltaEntity_Update;
+  const factory EventDeltaEntity.reset({required List<EventEntity> items}) =
+      EventDeltaEntity_Reset;
+}
+
+class EventEntity {
+  final String id;
+  final String senderId;
+  final String? senderDisplayName;
+  final String? senderAvatarUrl;
+  final String content;
+  final String? formattedContent;
+  final DateTime? timestamp;
+  final bool isRedacted;
+  final String eventType;
+  final String messageType;
+  final String status;
+  final bool isEncrypted;
+  final Map<String, String>? fileInfo;
+
+  const EventEntity({
+    required this.id,
+    required this.senderId,
+    this.senderDisplayName,
+    this.senderAvatarUrl,
+    required this.content,
+    this.formattedContent,
+    this.timestamp,
+    required this.isRedacted,
+    required this.eventType,
+    required this.messageType,
+    required this.status,
+    required this.isEncrypted,
+    this.fileInfo,
+  });
+
+  @override
+  int get hashCode =>
+      id.hashCode ^
+      senderId.hashCode ^
+      senderDisplayName.hashCode ^
+      senderAvatarUrl.hashCode ^
+      content.hashCode ^
+      formattedContent.hashCode ^
+      timestamp.hashCode ^
+      isRedacted.hashCode ^
+      eventType.hashCode ^
+      messageType.hashCode ^
+      status.hashCode ^
+      isEncrypted.hashCode ^
+      fileInfo.hashCode;
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is EventEntity &&
+          runtimeType == other.runtimeType &&
+          id == other.id &&
+          senderId == other.senderId &&
+          senderDisplayName == other.senderDisplayName &&
+          senderAvatarUrl == other.senderAvatarUrl &&
+          content == other.content &&
+          formattedContent == other.formattedContent &&
+          timestamp == other.timestamp &&
+          isRedacted == other.isRedacted &&
+          eventType == other.eventType &&
+          messageType == other.messageType &&
+          status == other.status &&
+          isEncrypted == other.isEncrypted &&
+          fileInfo == other.fileInfo;
+}
+
+class RoomEntity {
+  final String roomId;
+  final String displayName;
+  final String? avatarUrl;
+  final String? lastEventText;
+  final DateTime? lastEventReceivedTime;
+  final bool isDirectChat;
+  final bool isEncrypted;
+  final String? lastEvent;
+  final int participantCount;
+
+  const RoomEntity({
+    required this.roomId,
+    required this.displayName,
+    this.avatarUrl,
+    this.lastEventText,
+    this.lastEventReceivedTime,
+    required this.isDirectChat,
+    required this.isEncrypted,
+    this.lastEvent,
+    required this.participantCount,
+  });
+
+  @override
+  int get hashCode =>
+      roomId.hashCode ^
+      displayName.hashCode ^
+      avatarUrl.hashCode ^
+      lastEventText.hashCode ^
+      lastEventReceivedTime.hashCode ^
+      isDirectChat.hashCode ^
+      isEncrypted.hashCode ^
+      lastEvent.hashCode ^
+      participantCount.hashCode;
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is RoomEntity &&
+          runtimeType == other.runtimeType &&
+          roomId == other.roomId &&
+          displayName == other.displayName &&
+          avatarUrl == other.avatarUrl &&
+          lastEventText == other.lastEventText &&
+          lastEventReceivedTime == other.lastEventReceivedTime &&
+          isDirectChat == other.isDirectChat &&
+          isEncrypted == other.isEncrypted &&
+          lastEvent == other.lastEvent &&
+          participantCount == other.participantCount;
+}

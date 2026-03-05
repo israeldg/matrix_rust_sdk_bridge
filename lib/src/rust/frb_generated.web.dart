@@ -9,12 +9,9 @@
 import 'api/okra_wrap.dart';
 import 'dart:async';
 import 'dart:convert';
-import 'features/matrix_client_registry/domain/entities/registry_session.dart';
-import 'features/rooms/domain/entities/room.dart';
-import 'features/timeline/domain/entities/event.dart';
-import 'features/timeline/domain/entities/event_entity_delta.dart';
 import 'frb_generated.dart';
 import 'package:flutter_rust_bridge/flutter_rust_bridge_for_generated_web.dart';
+import 'third_party/praia_matrix/features/matrix_client_registry/domain/entities/registry_session.dart';
 
 abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   RustLibApiImplPlatform({
@@ -56,6 +53,9 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
   @protected
   DateTime dco_decode_box_autoadd_Chrono_Utc(dynamic raw);
+
+  @protected
+  ClientSessionEntity dco_decode_box_autoadd_client_session_entity(dynamic raw);
 
   @protected
   Credentials dco_decode_box_autoadd_credentials(dynamic raw);
@@ -180,6 +180,11 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
   @protected
   DateTime sse_decode_box_autoadd_Chrono_Utc(SseDeserializer deserializer);
+
+  @protected
+  ClientSessionEntity sse_decode_box_autoadd_client_session_entity(
+    SseDeserializer deserializer,
+  );
 
   @protected
   Credentials sse_decode_box_autoadd_credentials(SseDeserializer deserializer);
@@ -332,6 +337,12 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   @protected
   void sse_encode_box_autoadd_Chrono_Utc(
     DateTime self,
+    SseSerializer serializer,
+  );
+
+  @protected
+  void sse_encode_box_autoadd_client_session_entity(
+    ClientSessionEntity self,
     SseSerializer serializer,
   );
 

@@ -3,10 +3,11 @@
 
 // ignore_for_file: invalid_use_of_internal_member, unused_import, unnecessary_import
 
-import '../../../../frb_generated.dart';
+import '../../../../../../api/okra_wrap.dart';
+import '../../../../../../frb_generated.dart';
 import 'package:flutter_rust_bridge/flutter_rust_bridge_for_generated.dart';
-import 'package:freezed_annotation/freezed_annotation.dart' hide protected;
-part 'registry_session.freezed.dart';
+
+// These function are ignored because they are on traits that is not defined in current crate (put an empty `#[frb]` on it to unignore): `clone`, `fmt`, `fmt`, `fmt`, `fmt`
 
 class ClientSessionEntity {
   /// The URL of the homeserver of the user.
@@ -24,6 +25,18 @@ class ClientSessionEntity {
     required this.passphrase,
   });
 
+  // HINT: Make it `#[frb(sync)]` to let it become the default constructor of Dart class.
+  static Future<ClientSessionEntity> newInstance({
+    required String homeserver,
+    required String sessionPath,
+    required String passphrase,
+  }) => RustLib.instance.api
+      .praiaMatrixFeaturesMatrixClientRegistryDomainEntitiesRegistrySessionClientSessionEntityNew(
+        homeserver: homeserver,
+        sessionPath: sessionPath,
+        passphrase: passphrase,
+      );
+
   @override
   int get hashCode =>
       homeserver.hashCode ^ sessionPath.hashCode ^ passphrase.hashCode;
@@ -36,18 +49,6 @@ class ClientSessionEntity {
           homeserver == other.homeserver &&
           sessionPath == other.sessionPath &&
           passphrase == other.passphrase;
-}
-
-@freezed
-sealed class Credentials with _$Credentials {
-  const Credentials._();
-
-  const factory Credentials.accessToken(String field0) =
-      Credentials_AccessToken;
-  const factory Credentials.userPassword({
-    required String username,
-    required String password,
-  }) = Credentials_UserPassword;
 }
 
 class MatrixSessionEntity {
@@ -71,6 +72,20 @@ class MatrixSessionEntity {
     this.syncToken,
     this.credentials,
   });
+
+  // HINT: Make it `#[frb(sync)]` to let it become the default constructor of Dart class.
+  static Future<MatrixSessionEntity> newInstance({
+    required ClientSessionEntity clientSession,
+    UserSessionEntity? userSession,
+    String? syncToken,
+    Credentials? credentials,
+  }) => RustLib.instance.api
+      .praiaMatrixFeaturesMatrixClientRegistryDomainEntitiesRegistrySessionMatrixSessionEntityNew(
+        clientSession: clientSession,
+        userSession: userSession,
+        syncToken: syncToken,
+        credentials: credentials,
+      );
 
   @override
   int get hashCode =>
@@ -102,6 +117,20 @@ class UserSessionEntity {
     required this.deviceId,
     required this.matrixUserId,
   });
+
+  // HINT: Make it `#[frb(sync)]` to let it become the default constructor of Dart class.
+  static Future<UserSessionEntity> newInstance({
+    required String accessToken,
+    String? refreshToken,
+    required String matrixUserId,
+    required String deviceId,
+  }) => RustLib.instance.api
+      .praiaMatrixFeaturesMatrixClientRegistryDomainEntitiesRegistrySessionUserSessionEntityNew(
+        accessToken: accessToken,
+        refreshToken: refreshToken,
+        matrixUserId: matrixUserId,
+        deviceId: deviceId,
+      );
 
   @override
   int get hashCode =>

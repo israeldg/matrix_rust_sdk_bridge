@@ -6,14 +6,11 @@
 import 'api/okra_wrap.dart';
 import 'dart:async';
 import 'dart:convert';
-import 'features/matrix_client_registry/domain/entities/registry_session.dart';
-import 'features/rooms/domain/entities/room.dart';
-import 'features/timeline/domain/entities/event.dart';
-import 'features/timeline/domain/entities/event_entity_delta.dart';
 import 'frb_generated.dart';
 import 'frb_generated.io.dart'
     if (dart.library.js_interop) 'frb_generated.web.dart';
 import 'package:flutter_rust_bridge/flutter_rust_bridge_for_generated.dart';
+import 'third_party/praia_matrix/features/matrix_client_registry/domain/entities/registry_session.dart';
 
 /// Main entrypoint of the Rust API
 class RustLib extends BaseEntrypoint<RustLibApi, RustLibApiImpl, RustLibWire> {
@@ -70,7 +67,7 @@ class RustLib extends BaseEntrypoint<RustLibApi, RustLibApiImpl, RustLibWire> {
   String get codegenVersion => '2.11.1';
 
   @override
-  int get rustContentHash => -655152125;
+  int get rustContentHash => -1563057478;
 
   static const kDefaultExternalLibraryLoaderConfig =
       ExternalLibraryLoaderConfig(
@@ -81,12 +78,29 @@ class RustLib extends BaseEntrypoint<RustLibApi, RustLibApiImpl, RustLibWire> {
 }
 
 abstract class RustLibApi extends BaseApi {
+  Future<ClientSessionEntity>
+  praiaMatrixFeaturesMatrixClientRegistryDomainEntitiesRegistrySessionClientSessionEntityNew({
+    required String homeserver,
+    required String sessionPath,
+    required String passphrase,
+  });
+
   Stream<List<EventDeltaEntity>> crateApiOkraWrapFetchRoomEventsByRoomId({
     required String roomId,
     required String accountId,
   });
 
   Future<void> crateApiOkraWrapInitApp();
+
+  Future<void> crateApiOkraWrapMapCredentials({required Credentials cred});
+
+  Future<MatrixSessionEntity>
+  praiaMatrixFeaturesMatrixClientRegistryDomainEntitiesRegistrySessionMatrixSessionEntityNew({
+    required ClientSessionEntity clientSession,
+    UserSessionEntity? userSession,
+    String? syncToken,
+    Credentials? credentials,
+  });
 
   Future<MatrixSessionEntity> crateApiOkraWrapRegisterMatrixClient({
     required MatrixSessionEntity session,
@@ -100,6 +114,14 @@ abstract class RustLibApi extends BaseApi {
   });
 
   Stream<int> crateApiOkraWrapTick();
+
+  Future<UserSessionEntity>
+  praiaMatrixFeaturesMatrixClientRegistryDomainEntitiesRegistrySessionUserSessionEntityNew({
+    required String accessToken,
+    String? refreshToken,
+    required String matrixUserId,
+    required String deviceId,
+  });
 }
 
 class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
@@ -109,6 +131,46 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
     required super.generalizedFrbRustBinding,
     required super.portManager,
   });
+
+  @override
+  Future<ClientSessionEntity>
+  praiaMatrixFeaturesMatrixClientRegistryDomainEntitiesRegistrySessionClientSessionEntityNew({
+    required String homeserver,
+    required String sessionPath,
+    required String passphrase,
+  }) {
+    return handler.executeNormal(
+      NormalTask(
+        callFfi: (port_) {
+          final serializer = SseSerializer(generalizedFrbRustBinding);
+          sse_encode_String(homeserver, serializer);
+          sse_encode_String(sessionPath, serializer);
+          sse_encode_String(passphrase, serializer);
+          pdeCallFfi(
+            generalizedFrbRustBinding,
+            serializer,
+            funcId: 1,
+            port: port_,
+          );
+        },
+        codec: SseCodec(
+          decodeSuccessData: sse_decode_client_session_entity,
+          decodeErrorData: null,
+        ),
+        constMeta:
+            kPraiaMatrixFeaturesMatrixClientRegistryDomainEntitiesRegistrySessionClientSessionEntityNewConstMeta,
+        argValues: [homeserver, sessionPath, passphrase],
+        apiImpl: this,
+      ),
+    );
+  }
+
+  TaskConstMeta
+  get kPraiaMatrixFeaturesMatrixClientRegistryDomainEntitiesRegistrySessionClientSessionEntityNewConstMeta =>
+      const TaskConstMeta(
+        debugName: "client_session_entity_new",
+        argNames: ["homeserver", "sessionPath", "passphrase"],
+      );
 
   @override
   Stream<List<EventDeltaEntity>> crateApiOkraWrapFetchRoomEventsByRoomId({
@@ -127,7 +189,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
             pdeCallFfi(
               generalizedFrbRustBinding,
               serializer,
-              funcId: 1,
+              funcId: 2,
               port: port_,
             );
           },
@@ -159,7 +221,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
           pdeCallFfi(
             generalizedFrbRustBinding,
             serializer,
-            funcId: 2,
+            funcId: 3,
             port: port_,
           );
         },
@@ -178,6 +240,82 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
       const TaskConstMeta(debugName: "init_app", argNames: []);
 
   @override
+  Future<void> crateApiOkraWrapMapCredentials({required Credentials cred}) {
+    return handler.executeNormal(
+      NormalTask(
+        callFfi: (port_) {
+          final serializer = SseSerializer(generalizedFrbRustBinding);
+          sse_encode_box_autoadd_credentials(cred, serializer);
+          pdeCallFfi(
+            generalizedFrbRustBinding,
+            serializer,
+            funcId: 4,
+            port: port_,
+          );
+        },
+        codec: SseCodec(
+          decodeSuccessData: sse_decode_unit,
+          decodeErrorData: sse_decode_AnyhowException,
+        ),
+        constMeta: kCrateApiOkraWrapMapCredentialsConstMeta,
+        argValues: [cred],
+        apiImpl: this,
+      ),
+    );
+  }
+
+  TaskConstMeta get kCrateApiOkraWrapMapCredentialsConstMeta =>
+      const TaskConstMeta(debugName: "map_credentials", argNames: ["cred"]);
+
+  @override
+  Future<MatrixSessionEntity>
+  praiaMatrixFeaturesMatrixClientRegistryDomainEntitiesRegistrySessionMatrixSessionEntityNew({
+    required ClientSessionEntity clientSession,
+    UserSessionEntity? userSession,
+    String? syncToken,
+    Credentials? credentials,
+  }) {
+    return handler.executeNormal(
+      NormalTask(
+        callFfi: (port_) {
+          final serializer = SseSerializer(generalizedFrbRustBinding);
+          sse_encode_box_autoadd_client_session_entity(
+            clientSession,
+            serializer,
+          );
+          sse_encode_opt_box_autoadd_user_session_entity(
+            userSession,
+            serializer,
+          );
+          sse_encode_opt_String(syncToken, serializer);
+          sse_encode_opt_box_autoadd_credentials(credentials, serializer);
+          pdeCallFfi(
+            generalizedFrbRustBinding,
+            serializer,
+            funcId: 5,
+            port: port_,
+          );
+        },
+        codec: SseCodec(
+          decodeSuccessData: sse_decode_matrix_session_entity,
+          decodeErrorData: null,
+        ),
+        constMeta:
+            kPraiaMatrixFeaturesMatrixClientRegistryDomainEntitiesRegistrySessionMatrixSessionEntityNewConstMeta,
+        argValues: [clientSession, userSession, syncToken, credentials],
+        apiImpl: this,
+      ),
+    );
+  }
+
+  TaskConstMeta
+  get kPraiaMatrixFeaturesMatrixClientRegistryDomainEntitiesRegistrySessionMatrixSessionEntityNewConstMeta =>
+      const TaskConstMeta(
+        debugName: "matrix_session_entity_new",
+        argNames: ["clientSession", "userSession", "syncToken", "credentials"],
+      );
+
+  @override
   Future<MatrixSessionEntity> crateApiOkraWrapRegisterMatrixClient({
     required MatrixSessionEntity session,
   }) {
@@ -189,7 +327,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
           pdeCallFfi(
             generalizedFrbRustBinding,
             serializer,
-            funcId: 3,
+            funcId: 6,
             port: port_,
           );
         },
@@ -223,7 +361,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
             pdeCallFfi(
               generalizedFrbRustBinding,
               serializer,
-              funcId: 4,
+              funcId: 7,
               port: port_,
             );
           },
@@ -262,7 +400,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
             pdeCallFfi(
               generalizedFrbRustBinding,
               serializer,
-              funcId: 5,
+              funcId: 8,
               port: port_,
             );
           },
@@ -297,7 +435,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
             pdeCallFfi(
               generalizedFrbRustBinding,
               serializer,
-              funcId: 6,
+              funcId: 9,
               port: port_,
             );
           },
@@ -316,6 +454,48 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
 
   TaskConstMeta get kCrateApiOkraWrapTickConstMeta =>
       const TaskConstMeta(debugName: "tick", argNames: ["sink"]);
+
+  @override
+  Future<UserSessionEntity>
+  praiaMatrixFeaturesMatrixClientRegistryDomainEntitiesRegistrySessionUserSessionEntityNew({
+    required String accessToken,
+    String? refreshToken,
+    required String matrixUserId,
+    required String deviceId,
+  }) {
+    return handler.executeNormal(
+      NormalTask(
+        callFfi: (port_) {
+          final serializer = SseSerializer(generalizedFrbRustBinding);
+          sse_encode_String(accessToken, serializer);
+          sse_encode_opt_String(refreshToken, serializer);
+          sse_encode_String(matrixUserId, serializer);
+          sse_encode_String(deviceId, serializer);
+          pdeCallFfi(
+            generalizedFrbRustBinding,
+            serializer,
+            funcId: 10,
+            port: port_,
+          );
+        },
+        codec: SseCodec(
+          decodeSuccessData: sse_decode_user_session_entity,
+          decodeErrorData: null,
+        ),
+        constMeta:
+            kPraiaMatrixFeaturesMatrixClientRegistryDomainEntitiesRegistrySessionUserSessionEntityNewConstMeta,
+        argValues: [accessToken, refreshToken, matrixUserId, deviceId],
+        apiImpl: this,
+      ),
+    );
+  }
+
+  TaskConstMeta
+  get kPraiaMatrixFeaturesMatrixClientRegistryDomainEntitiesRegistrySessionUserSessionEntityNewConstMeta =>
+      const TaskConstMeta(
+        debugName: "user_session_entity_new",
+        argNames: ["accessToken", "refreshToken", "matrixUserId", "deviceId"],
+      );
 
   @protected
   AnyhowException dco_decode_AnyhowException(dynamic raw) {
@@ -382,6 +562,14 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   DateTime dco_decode_box_autoadd_Chrono_Utc(dynamic raw) {
     // Codec=Dco (DartCObject based), see doc to use other codecs
     return dco_decode_Chrono_Utc(raw);
+  }
+
+  @protected
+  ClientSessionEntity dco_decode_box_autoadd_client_session_entity(
+    dynamic raw,
+  ) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    return dco_decode_client_session_entity(raw);
   }
 
   @protected
@@ -717,6 +905,14 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   DateTime sse_decode_box_autoadd_Chrono_Utc(SseDeserializer deserializer) {
     // Codec=Sse (Serialization based), see doc to use other codecs
     return (sse_decode_Chrono_Utc(deserializer));
+  }
+
+  @protected
+  ClientSessionEntity sse_decode_box_autoadd_client_session_entity(
+    SseDeserializer deserializer,
+  ) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    return (sse_decode_client_session_entity(deserializer));
   }
 
   @protected
@@ -1190,6 +1386,15 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   ) {
     // Codec=Sse (Serialization based), see doc to use other codecs
     sse_encode_Chrono_Utc(self, serializer);
+  }
+
+  @protected
+  void sse_encode_box_autoadd_client_session_entity(
+    ClientSessionEntity self,
+    SseSerializer serializer,
+  ) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    sse_encode_client_session_entity(self, serializer);
   }
 
   @protected
